@@ -18,6 +18,8 @@ dependencies = []
 dev = [
     "pre-commit>=4.2.0",
     "pytest>=8.4.1",
+    "pytest-cov>=6.2.1",
+    "pyright>=1.1.402",
     "ruff>=0.12.3",
 ]
 docs = [
@@ -44,12 +46,45 @@ default-groups = ["dev", "docs"]
 
 [tool.ruff]
 exclude = [
-    "tests",
     ".venv",
 ]
 line-length = 88
 indent-width = 4
 target-version = "py313"
+
+[tool.ruff.lint]
+select = [
+    "E",   # pycodestyle errors
+    "W",   # pycodestyle warnings
+    "F",   # pyflakes
+    "UP",  # pyupgrade
+    "B",   # flake8-bugbear
+    "SIM", # flake8-simplify
+    "RUF", # ruff-specific rules
+    "PT",  # flake8-pytest-style
+    "I",   # isort
+]
+
+[tool.ruff.lint.isort]
+known-first-party = ["metaconf"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "--tb=short"
+
+[tool.coverage.run]
+source = ["src/metaconf"]
+
+[tool.coverage.report]
+show_missing = true
+fail_under = 60
+
+[tool.pyright]
+typeCheckingMode = "basic"
+include = ["src/metaconf", "tests"]
+venvPath = "."
+venv = ".venv"
+reportMissingTypeStubs = false
 
 [tool.jupytext]
 formats = "ipynb,md"
