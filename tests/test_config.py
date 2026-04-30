@@ -185,10 +185,13 @@ class TestStrIsPath:
         assert _str_is_path(str(tmp_path))
 
     def test_nonexistent_relative_path(self):
-        assert not _str_is_path("not_a_path_xyz<<<<")
+        assert not _str_is_path("configs/my_config.json")
 
-    def test_absolute_path(self):
+    def test_nonexistent_absolute_path(self):
         assert _str_is_path("/absolute/path.txt")
+
+    def test_invalid_path_characters(self):
+        assert not _str_is_path("not_a_path_xyz<<<<")
 
     def test_random_string(self):
         assert not _str_is_path("not a path at all!!<>?")

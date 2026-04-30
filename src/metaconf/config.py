@@ -225,7 +225,7 @@ def _str_is_json(s: str) -> bool:
 def _str_is_path(s: str) -> bool:
     try:
         path = Path(s)
-        return path.exists() or path.is_absolute() or path.is_relative_to(Path.cwd())
+        return path.exists() or path.is_absolute()
     except (OSError, ValueError):
         return False
 
