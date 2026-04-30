@@ -129,6 +129,29 @@ class TestFilter:
         with pytest.raises(ValueError, match="Must provide"):
             filter()(object)
 
+    def test_filter_does_not_mutate_original_class(self):
+        class OriginalHandler:
+            def read(self, path):
+                return "original"
+
+            def write(self, path, data, *, overwrite_ok=False):
+                pass
+
+        original_read = OriginalHandler.read
+        original_write = OriginalHandler.write
+
+        @filter(read=lambda path: False)
+        class FilteredHandler(OriginalHandler):
+            pass
+
+        # The filtered class should be a subclass, not a mutation
+        assert issubclass(FilteredHandler, OriginalHandler)
+        # The original class methods should be untouched
+        assert OriginalHandler.read is original_read
+        assert OriginalHandler.write is original_write
+        # The filtered instance should return MISSING
+        assert FilteredHandler().read("test.txt") is MISSING
+
 
 class TestFilterMissing:
     def test_filter_missing_exists(self):

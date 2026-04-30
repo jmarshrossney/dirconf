@@ -153,10 +153,14 @@ def filter(
             test=write or (lambda *_, **__: True), label=label, warn=warn
         )(original_write)
 
-        cls.read = wrapped_read
-        cls.write = wrapped_write
+        class FilteredHandler(cls):  # type: ignore[misc]
+            read = wrapped_read
+            write = wrapped_write
 
-        return cls
+        FilteredHandler.__name__ = cls.__name__  # type: ignore[attr-defined]
+        FilteredHandler.__qualname__ = cls.__qualname__  # type: ignore[attr-defined]
+
+        return FilteredHandler  # type: ignore[return-value]
 
     return decorator
 
