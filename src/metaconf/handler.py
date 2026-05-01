@@ -109,7 +109,10 @@ def infer_handler_from_path(path: str | PathLike) -> HandlerFactory:
             f"No handler found for extension '{extension}' in the handler registry."
         )
     if len(compatible_handlers) > 1:
+        handler_names = list(compatible_handlers.keys())
+        selected = handler_names[-1]
         logger.warning(
-            f"Multiple compatible handlers found for extension '{extension}'."
+            f"Multiple compatible handlers found for extension '{extension}': "
+            f"{handler_names}. Selecting '{selected}'."
         )
     return list(compatible_handlers.values())[-1]
