@@ -343,7 +343,7 @@ config = handler.read("./basic")
 
 We see that `DummyHandler.read` was never called, and instead we are shown a warning that `read('optional.file')` was filtered out by a test (which we are shown the code for). Note that this warning can be disabled by setting `warn=False` (the default) in `filter_missing`. 
 
-The configuration `dict` contains an entry corresponding to the `optional` node, but it has a special _sentinal_ value, [metaconf.filter.MISSING][].
+The configuration `dict` contains an entry corresponding to the `optional` node, but it has a special _sentinel_ value, [metaconf.filter.MISSING][].
 
 ```python
 config

@@ -13,12 +13,20 @@ readme = "README.md"
 license = "MIT"
 requires-python = ">=3.11"
 dependencies = []
+keywords = ["configuration", "config"]
+classifiers = [
+  "Development Status :: 3 - Alpha",
+  "Intended Audience :: Developers",
+]
 
 [dependency-groups]
 dev = [
     "pre-commit>=4.2.0",
-    "pytest>=8.4.1",
+    "pyright>=1.1.402",
     "ruff>=0.12.3",
+    "rust-just>=1.50.0",
+    {include-group = "docs"},
+    {include-group = "test"},
 ]
 docs = [
     "markdown-exec[ansi]>=1.11.0",
@@ -38,18 +46,33 @@ examples = [
     "pyyaml>=6.0.2",
     "netcdf4>=1.7.2",
 ]
-
-[tool.uv]
-default-groups = ["dev", "docs"]
+test = [
+    "coverage>=7.13.5",
+    "pytest>=8.4.1",
+    "pytest-cov>=7.1.0",
+]
 
 [tool.ruff]
-exclude = [
-    "tests",
-    ".venv",
-]
 line-length = 88
 indent-width = 4
-target-version = "py313"
+target-version = "py311"
+
+[tool.ruff.lint]
+select = [
+    "E",   # pycodestyle errors
+  #   "D",   # pydocstyle
+    "W",   # pycodestyle warnings
+    "F",   # pyflakes
+    "UP",  # pyupgrade
+    "B",   # flake8-bugbear
+    "SIM", # flake8-simplify
+    "RUF", # ruff-specific rules
+    "PT",  # flake8-pytest-style
+    "I",   # isort
+]
+
+[tool.ruff.lint.pydocstyle]
+convention = "google"
 
 [tool.jupytext]
 formats = "ipynb,md"

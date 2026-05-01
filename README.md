@@ -1,12 +1,17 @@
 # Metaconf
 
-> [!IMPORTANT]
-> This package is only a few days old. It is sparsely tested. Use at your own risk!
+[![PyPI Version](https://img.shields.io/pypi/v/metaconf)](https://pypi.org/project/metaconf/)
+[![Python Version](https://img.shields.io/pypi/pyversions/metaconf)](https://pypi.org/project/metaconf/)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[![CI](https://img.shields.io/github/actions/workflow/status/jmarshrossney/metaconf/ci.yml?branch=main&label=CI)](https://github.com/jmarshrossney/metaconf/actions)
 
+---
 
 `metaconf` is a simple tool for the meta-configuration of collections of configuration files, leaning heavily on Python [dataclasses](https://docs.python.org/3/library/dataclasses.html).
 
-I wrote this because I sometimes work with quite old scientific models requiring various configuration files and data inputs in various formats to be present in various locations. I was (and remain) concerned about how easy it can be to misconfigure certain models without realising, and how common workflows compromise reproducibility.
+I wrote this because I sometimes have to work with quite old scientific models that require various configuration files and data inputs in various formats to be present in various locations.
+
+I was (and remain) concerned about how easy it can be to misconfigure certain models without realising, and how common workflows compromise reproducibility.
 
 `metaconf` helps by
 
@@ -18,51 +23,29 @@ I wrote this because I sometimes work with quite old scientific models requiring
 
 For user documentation and examples please visit [https://jmarshrossney.github.io/metaconf/](https://jmarshrossney.github.io/metaconf/).
 
+---
 
-## Getting started
+## Installation
 
-This project uses [`uv`](https://docs.astral.sh/uv/), although you are free to substitute this with other tools for working on Python projects.
-
-Install the project and development dependencies by running
-
-```sh
-uv sync
-```
-
-You can now run the tests in the repository root with
+Either
 
 ```sh
-uv run pytest
+pip install metaconf
 ```
 
-Before contributing, consider installing [`pre-commit`](https://pre-commit.com/) so that the pre-commit hooks run before each commit.
+or
 
 ```sh
-uv tool install pre-commit
+uv add metaconf
 ```
 
-## Building the example notebooks
+or the equivalent command for other package managers (poetry etc).
 
-The following command will convert all markdown `.md` notebooks to Jupyter `.ipynb` notebooks, and execute them.
+## Development
 
-```sh
-uv run --group examples jupytext --set-formats ipynb,md --execute docs/examples/*/*.md
-```
+Contributions are welcome!
 
-## Building the documentation
+Please open a Pull Request against the `main` branch.
 
-After building the notebooks, simply run
-
-```sh
-uv run mkdocs serve
-```
-
-to build the documentation and display it in your browser.
-
-
-## Contributing
-
-Contributions are welcome! Please open a Pull Request against the `develop` branch.
-
-However, please keep in mind that the overarching goal of this project is to be as simple as possible (while still being useful).
+See [`CONTRIBUTING.md`](CONTRIBUTING.md) for full details.
 

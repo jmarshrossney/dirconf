@@ -1,10 +1,11 @@
-from abc import abstractmethod
-from collections import OrderedDict
 import importlib
 import logging
+from abc import abstractmethod
+from collections import OrderedDict
+from collections.abc import Callable
 from os import PathLike
 from pathlib import Path
-from typing import Any, Callable, Protocol, runtime_checkable, TypeAlias
+from typing import Any, Protocol, TypeAlias, runtime_checkable
 
 logger = logging.getLogger(__name__)
 
@@ -30,11 +31,20 @@ class Handler(Protocol):
         ...
 
 
-ReadMethod: TypeAlias = Callable[[Handler, Path], Any]
-"""Type alias for the `read` method of a handler."""
+ReadMethod: TypeAlias = Callable[..., Any]
+"""Type alias for the `read` method of a handler.
 
-WriteMethod: TypeAlias = Callable[[Handler, Path, Any, bool], None]
-"""Type alias for the `write` method of a handler."""
+Expected signature: `(self, path: str | PathLike) -> Any`
+"""
+
+WriteMethod: TypeAlias = Callable[..., None]
+"""Type alias for the `write` method of a handler.
+
+Expected signature:
+   `(self, path: str | PathLike, data: Any, *, overwrite_ok: bool) -> None`
+Note: `Callable` cannot express keyword-only parameters or `self` binding.
+The `overwrite_ok` parameter must be passed as a keyword argument at runtime.
+"""
 
 HandlerFactory: TypeAlias = Callable[[], Handler]
 """Type alias for a zero-argument callable that returns a Handler."""
@@ -43,19 +53,26 @@ handler_registry: OrderedDict = OrderedDict({})
 
 
 def register_handler(
-    name: str, handler: HandlerFactory, extensions: list[str] = []
+    name: str, handler: HandlerFactory, extensions: list[str] | None = None
 ) -> None:
     """Add a handler factory to the registry."""
+    if extensions is None:
+        extensions = []
+
     if name in handler_registry:
         logger.warning(
             f"'{name}' already exists in handler registry, and will be overwritten!"
         )
 
-    assert isinstance(name, str)
-    assert isinstance(handler(), Handler)
+    if not isinstance(name, str):
+        raise TypeError(f"handler name must be a string, got {type(name)}")
+    if not isinstance(handler(), Handler):
+        raise TypeError(f"handler factory must return a Handler, got {type(handler())}")
 
-    assert all([isinstance(ext, str) for ext in extensions])
-    assert all([ext.startswith(".") for ext in extensions])
+    if not all(isinstance(ext, str) for ext in extensions):
+        raise TypeError("extensions must be a list of strings")
+    if not all(ext.startswith(".") for ext in extensions):
+        raise ValueError("extensions must start with '.'")
 
     handler_registry[name] = {
         "handler": handler,
@@ -64,7 +81,7 @@ def register_handler(
 
 
 def parse_handler(input: str | HandlerFactory) -> HandlerFactory:
-    """Returns a `HandlerFactory given any valid input."""
+    """Returns a `HandlerFactory` given any valid input."""
     if input in handler_registry:
         handler = handler_registry[input]["handler"]
     elif isinstance(input, str):
@@ -88,11 +105,14 @@ def infer_handler_from_path(path: str | PathLike) -> HandlerFactory:
         if extension in val["extensions"]
     }
     if not compatible_handlers:
-        raise Exception(
+        raise ValueError(
             f"No handler found for extension '{extension}' in the handler registry."
         )
     if len(compatible_handlers) > 1:
+        handler_names = list(compatible_handlers.keys())
+        selected = handler_names[-1]
         logger.warning(
-            f"Multiple compatible handlers found for extension '{extension}'."
+            f"Multiple compatible handlers found for extension '{extension}': "
+            f"{handler_names}. Selecting '{selected}'."
         )
     return list(compatible_handlers.values())[-1]

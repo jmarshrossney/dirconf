@@ -1,22 +1,25 @@
 import functools
 import inspect
+import warnings
+from collections.abc import Callable
 from os import PathLike
 from pathlib import Path
-from typing import Any, Callable
-import warnings
+from typing import Any, TypeVar
 
 from .handler import Handler, ReadMethod, WriteMethod
 
+_H = TypeVar("_H", bound=Handler)  # _H is Handler or FilteredHandler
 
-class MISSING:
-    """A sentinal value that may be used in place of missing data."""
+
+MISSING = object()
+"""A sentinel value that may be used in place of missing data."""
 
 
 class MissingWarning(Warning):
     """A warning indicating that a filter test has failed, perhaps unexpectedly."""
 
 
-def _repr_from_test(test: Callable[[...], bool]) -> str:
+def _repr_from_test(test: Callable[..., bool]) -> str:
     if test.__name__ == "<lambda>":
         src, _ = inspect.getsourcelines(test)
         return "".join(src).strip()
@@ -54,8 +57,10 @@ def filter_read(
             if not test(Path(path)):
                 if warn:
                     warnings.warn(
-                        f"read('{path}') filtered out by test '{label}'; returning `MISSING`.",
+                        f"read('{path}') filtered out by test "
+                        f"'{label}'; returning `MISSING`.",
                         MissingWarning,
+                        stacklevel=2,
                     )
                 return MISSING
 
@@ -67,7 +72,7 @@ def filter_read(
 
 
 def filter_write(
-    test: Callable[[Path], bool],
+    test: Callable[..., bool],
     label: str | None = None,
     warn: bool = False,
 ) -> Callable[[WriteMethod], WriteMethod]:
@@ -92,16 +97,19 @@ def filter_write(
 
     def wrapper(original_write: WriteMethod) -> WriteMethod:
         @functools.wraps(original_write)
-        def wrapped_write(self, path: str | PathLike, data: Any, **kwargs) -> None:
-            if not test(Path(path), data, **kwargs):
+        def wrapped_write(
+            self, path: str | PathLike, data: Any, *, overwrite_ok: bool = False
+        ) -> None:
+            if not test(Path(path), data, overwrite_ok=overwrite_ok):
                 if warn:
                     warnings.warn(
                         f"write('{path}') filtered out by test: '{label}'; Skipping...",
                         MissingWarning,
+                        stacklevel=2,
                     )
                 return
 
-            return original_write(self, path, data, **kwargs)
+            return original_write(self, path, data, overwrite_ok=overwrite_ok)
 
         return wrapped_write
 
@@ -110,10 +118,10 @@ def filter_write(
 
 def filter(
     read: Callable[[Path], bool] | None = None,
-    write: Callable[[Path, Any, ...], bool] | None = None,
+    write: Callable[..., bool] | None = None,
     label: str | None = None,
     warn: bool = False,
-) -> Callable[type[Handler], type[Handler]]:
+) -> Callable[[Any], Any]:
     """A decorator for classes satisfying the `Handler` protocol.
 
     This provides an alternative to decorating both the `read` method
@@ -131,9 +139,10 @@ def filter(
       - [`filter_missing`][metaconf.filter.filter_missing]
     """
 
-    assert read or write, "Must provide at least one of (`read`, `write`)."
+    if not (read or write):
+        raise ValueError("Must provide at least one of (`read`, `write`).")
 
-    def decorator(cls: Handler):
+    def decorator(cls: Any) -> Any:
         original_read = cls.read
         original_write = cls.write
 
@@ -144,15 +153,19 @@ def filter(
             test=write or (lambda *_, **__: True), label=label, warn=warn
         )(original_write)
 
-        cls.read = wrapped_read
-        cls.write = wrapped_write
+        class FilteredHandler(cls):  # type: ignore[misc]
+            read = wrapped_read
+            write = wrapped_write
 
-        return cls
+        FilteredHandler.__name__ = cls.__name__  # type: ignore[attr-defined]
+        FilteredHandler.__qualname__ = cls.__qualname__  # type: ignore[attr-defined]
+
+        return FilteredHandler  # type: ignore[return-value]
 
     return decorator
 
 
-def filter_missing(warn: bool = False) -> Callable[type[Handler], type[Handler]]:
+def filter_missing(warn: bool = False) -> Callable[[Any], Any]:
     """Filter out non-existent paths from `read` and `MISSING` data from `write.
 
     This is implemented purely for convenience, since it simply calls

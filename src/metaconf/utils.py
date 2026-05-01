@@ -2,8 +2,8 @@ import json
 import logging
 import os
 import pathlib
-from typing import Iterator
 import types
+from collections.abc import Iterator
 
 logger = logging.getLogger(__name__)
 
@@ -22,13 +22,19 @@ class switch_dir:
             )
 
     def __enter__(self):
-        logger.debug("Switching directory to %s" % self.new)
+        logger.debug(f"Switching directory to {self.new}")
         self.old = pathlib.Path.cwd()
         os.chdir(self.new)
 
     def __exit__(self, etype, value, traceback):
-        logger.debug("Switching directory back to %s" % self.old)
-        os.chdir(self.old)
+        logger.debug(f"Switching directory back to {self.old}")
+        try:
+            os.chdir(self.old)
+        except FileNotFoundError:
+            logger.warning(
+                f"Original directory '{self.old}' no longer exists. "
+                f"Remaining in '{self.new}'."
+            )
 
 
 def _tree(path: pathlib.Path, prefix: str) -> Iterator[str]:
@@ -40,7 +46,7 @@ def _tree(path: pathlib.Path, prefix: str) -> Iterator[str]:
     contents = sorted(path.iterdir())
     pointers = [tee] * (len(contents) - 1) + [elbow]
 
-    for pointer, path_ in zip(pointers, contents):
+    for pointer, path_ in zip(pointers, contents, strict=False):
         yield prefix + pointer + path_.name
 
         if path_.is_dir():
@@ -58,9 +64,11 @@ def tree(path: str | os.PathLike) -> str:
 
     Note:
       This is inspired by [GNU `tree`](https://linux.die.net/man/1/tree) and
-      is an adaptation of [this stackoverflow answer](https://stackoverflow.com/questions/9727673/list-directory-tree-structure-in-python) by Aaron Hall.
+      is an adaptation of
+      [this stackoverflow answer](https://stackoverflow.com/questions/9727673/list-directory-tree-structure-in-python)
+      by Aaron Hall.
     """
-    return path + "\n" + "\n".join(list(_tree(pathlib.Path(path), prefix="")))
+    return str(path) + "\n" + "\n".join(list(_tree(pathlib.Path(path), prefix="")))
 
 
 def dict_to_namespace(dict_: dict) -> types.SimpleNamespace:

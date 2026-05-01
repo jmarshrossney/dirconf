@@ -64,11 +64,11 @@ def test_instantiation(dict_spec):
     class_ = make_metaconfig("TestConfig", dict_spec)
     # Test bfile given as path
     _ = class_(
-            afile={"path": "afile.txt", "handler": "test_handler"},
-            bfile="bfile.txt",
+        afile={"path": "afile.txt", "handler": "test_handler"},  # type: ignore[reportCallIssue]
+        bfile="bfile.txt",  # type: ignore[reportCallIssue]
     )
     # Test bfile given as single-element dict
     _ = class_(
-            afile={"path": "afile.txt", "handler": "test_handler"},
-            bfile={"path": "bfile.txt"},
+        afile={"path": "afile.txt", "handler": "test_handler"},  # type: ignore[reportCallIssue]
+        bfile={"path": "bfile.txt"},  # type: ignore[reportCallIssue]
     )

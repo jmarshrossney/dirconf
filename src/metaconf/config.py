@@ -1,9 +1,10 @@
 import dataclasses
 import json
 import logging
+from collections.abc import Iterator
 from os import PathLike
 from pathlib import Path
-from typing import Any, Iterator, Self
+from typing import Any, Self
 
 from .node import Node, path_to_node, to_node
 from .utils import switch_dir
@@ -22,17 +23,21 @@ class MetaConfig:
 
     def __post_init__(self) -> None:
         for field in dataclasses.fields(self):
+            value = getattr(self, field.name)
+            if isinstance(value, Node):
+                continue
             if (transform := field.metadata.get("transform")) is not None:
-                # Apply transform if specified
-                setattr(self, field.name, transform(getattr(self, field.name)))
-
-            if not isinstance(getattr(self, field.name), Node):
-                # try to coerce to a Node
-                setattr(self, field.name, to_node(getattr(self, field.name)))
+                setattr(self, field.name, transform(value))
+            else:
+                setattr(self, field.name, to_node(value))
 
     def __call__(self) -> Self:
-        # TODO: figure out if this is sufficient for nested MetaConfig objects
-        return type(self)(**dataclasses.asdict(self))
+        init_kwargs = {
+            field.name: getattr(self, field.name)
+            for field in dataclasses.fields(self)
+            if field.init
+        }
+        return type(self)(**init_kwargs)
 
     def read(self, path: str | PathLike) -> dict[str, Any]:
         """Read a configuration from a given path and return its contents as a dict.
@@ -74,7 +79,7 @@ class MetaConfig:
 
         if not path.is_dir():
             logger.info(f"Creating new directory at '{path.resolve()}'")
-            path.mkdir(parents=True)
+            path.mkdir(parents=True, exist_ok=True)
 
         with switch_dir(path):
             for field in dataclasses.fields(self):
@@ -119,7 +124,7 @@ class MetaConfig:
         pointers = [tee] * (len(fields) - 1) + [elbow]
         longest_name = max([len(field.name) for field in fields])
 
-        for pointer, field in zip(pointers, fields):
+        for pointer, field in zip(pointers, fields, strict=False):
             config = getattr(self, field.name)
             handler = config.handler()
 
@@ -176,9 +181,10 @@ def _make_metaconfig(cls_name: str, config: dict, **kwargs) -> type[MetaConfig]:
                     init=False, default_factory=lambda p=path, h=handler: Node(p, h)
                 ),
             )
-            # Note that the *current* values of path, handler are bound to the lambda
-            # function through the explicit arguments. That is, `lambda: Node(path, handler)`
-            # is wrong since the path, handler will be the values from the final iteration!
+            # Note that the *current* values of path, handler are bound to
+            # the lambda function through the explicit arguments. That is,
+            # `lambda: Node(path, handler)` is wrong since the path, handler
+            # will be the values from the final iteration!
 
         # Only handler specified
         elif handler and not path:
@@ -219,7 +225,7 @@ def _str_is_json(s: str) -> bool:
 def _str_is_path(s: str) -> bool:
     try:
         path = Path(s)
-        return path.exists() or path.is_absolute() or path.is_relative_to(Path.cwd())
+        return path.exists() or path.is_absolute()
     except (OSError, ValueError):
         return False
 
@@ -229,9 +235,10 @@ def make_metaconfig(
 ) -> type[MetaConfig]:
     """A function that generates subclasses of `MetaConfig`.
 
-    This is a wrapper around [`dataclasses.make_dataclass`](https://docs.python.org/3/library/dataclasses.html#dataclasses.make_dataclass) that sets the base class
-    to [metaconf.config.MetaConfig][] and constructs fields using the provided
-    `spec`.
+    This is a wrapper around
+    [`dataclasses.make_dataclass`](https://docs.python.org/3/library/dataclasses.html#dataclasses.make_dataclass)
+    that sets the base class to [metaconf.config.MetaConfig][] and constructs
+    fields using the provided `spec`.
 
     Arguments:
       cls_name: A name for the class being created.
@@ -248,7 +255,7 @@ def make_metaconfig(
         return _make_metaconfig(cls_name, json.loads(spec), **kwargs)
 
     if isinstance(spec, PathLike) or (isinstance(spec, str) and _str_is_path(spec)):
-        with open(spec, "r") as file:
+        with open(spec) as file:
             loaded_spec = json.load(file)
         return _make_metaconfig(cls_name, loaded_spec, **kwargs)
 
