@@ -79,7 +79,7 @@ class MetaConfig:
 
         if not path.is_dir():
             logger.info(f"Creating new directory at '{path.resolve()}'")
-            path.mkdir(parents=True)
+            path.mkdir(parents=True, exist_ok=True)
 
         with switch_dir(path):
             for field in dataclasses.fields(self):
