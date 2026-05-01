@@ -1,5 +1,8 @@
 name: Publish to PyPI
 
+# Disabled: publishing to PyPI is deferred until the name-collision issue is
+# resolved. See README.md for install instructions using GitHub directly.
+#
 # Publishing workflow with three trigger modes:
 #
 # 1. Publish to TestPyPI (verify before a full release):
@@ -14,33 +17,33 @@ name: Publish to PyPI
 # 3. Manual publish (Actions tab -> "Publish to PyPI" -> "Run workflow"):
 #    Choose 'testpypi' or 'pypi' from the dropdown. Defaults to testpypi.
 
-on:
-  release:
-    types: [created]
-  push:
-    tags:
-      - 'v*'
-  workflow_dispatch:
-    inputs:
-      target:
-        description: "Publish target"
-        required: true
-        default: testpypi
-        type: choice
-        options:
-          - testpypi
-          - pypi
+# on:
+#   release:
+#     types: [created]
+#   push:
+#     tags:
+#       - 'v*'
+#   workflow_dispatch:
+#     inputs:
+#       target:
+#         description: "Publish target"
+#         required: true
+#         default: testpypi
+#         type: choice
+#         options:
+#           - testpypi
+#           - pypi
 
-jobs:
-  pypi-publish:
-    name: Upload release to ${{ github.event_name == 'push' && 'testpypi' || inputs.target || 'pypi' }}
-    runs-on: ubuntu-latest
-    environment: ${{ github.event_name == 'push' && 'testpypi' || inputs.target || 'pypi' }}
-    permissions:
-      id-token: write
-      contents: read
-    steps:
-      - uses: actions/checkout@v6
-      - uses: astral-sh/setup-uv@8.1.0
-      - run: uv build
-      - run: uv publish ${{ (github.event_name == 'push' || inputs.target == 'testpypi') && '--publish-url https://test.pypi.org/legacy/' || '' }}
+# jobs:
+#   pypi-publish:
+#     name: Upload release to ... etc ...
+#     runs-on: ubuntu-latest
+#     environment: ...
+#     permissions:
+#       id-token: write
+#       contents: read
+#     steps:
+#       - uses: actions/checkout@v6
+#       - uses: astral-sh/setup-uv@8.1.0
+#       - run: uv build
+#       - run: uv publish ...

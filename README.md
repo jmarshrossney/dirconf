@@ -1,10 +1,7 @@
 # Metaconf
 
-[![PyPI Version](https://img.shields.io/pypi/v/metaconf)](https://pypi.org/project/metaconf/)
-[![Python Version](https://img.shields.io/pypi/pyversions/metaconf)](https://pypi.org/project/metaconf/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![CI](https://img.shields.io/github/actions/workflow/status/jmarshrossney/metaconf/ci.yml?branch=main&label=CI)](https://github.com/jmarshrossney/metaconf/actions)
-
 ---
 
 `metaconf` is a simple tool for the meta-configuration of collections of configuration files, leaning heavily on Python [dataclasses](https://docs.python.org/3/library/dataclasses.html).
@@ -23,23 +20,34 @@ I was (and remain) concerned about how easy it can be to misconfigure certain mo
 
 For user documentation and examples please visit [https://jmarshrossney.github.io/metaconf/](https://jmarshrossney.github.io/metaconf/).
 
----
-
 ## Installation
 
-Either
+```sh
+pip install git+https://github.com/jmarshrossney/metaconf.git
+```
+
+or with `uv`:
 
 ```sh
-pip install metaconf
+uv add git+https://github.com/jmarshrossney/metaconf.git
+```
+
+or the equivalent command for other package managers (poetry etc).
+
+Unfortunately the `metaconf` name is taken on PyPI (although the package is dead).
+For now keep using GitHub.
+
+## Updating
+
+```sh
+pip install --upgrade git+https://github.com/jmarshrossney/metaconf.git
 ```
 
 or
 
 ```sh
-uv add metaconf
+uv sync --upgrade-package metaconf
 ```
-
-or the equivalent command for other package managers (poetry etc).
 
 ## Development
 
