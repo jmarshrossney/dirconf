@@ -1,6 +1,6 @@
 # Contributing
 
-Contributions are welcome! Please open a Pull Request against the `develop` branch.
+Contributions are welcome! Please open a Pull Request against the `main` branch.
 
 Keep in mind that the overarching goal of this project is to be as simple as possible (while still being useful).
 

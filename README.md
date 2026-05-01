@@ -3,7 +3,7 @@
 [![PyPI Version](https://img.shields.io/pypi/v/metaconf)](https://pypi.org/project/metaconf/)
 [![Python Version](https://img.shields.io/pypi/pyversions/metaconf)](https://pypi.org/project/metaconf/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
-[![CI](https://img.shields.io/github/actions/workflow/status/jmarshrossney/metaconf/ci.yml?branch=develop&label=CI)](https://github.com/jmarshrossney/metaconf/actions)
+[![CI](https://img.shields.io/github/actions/workflow/status/jmarshrossney/metaconf/ci.yml?branch=main&label=CI)](https://github.com/jmarshrossney/metaconf/actions)
 
 ---
 
@@ -45,7 +45,7 @@ or the equivalent command for other package managers (poetry etc).
 
 Contributions are welcome!
 
-Please open a Pull Request against the `develop` branch.
+Please open a Pull Request against the `main` branch.
 
 See [`CONTRIBUTING.md`](CONTRIBUTING.md) for full details.
 
