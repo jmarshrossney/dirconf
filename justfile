@@ -6,6 +6,11 @@ lint:
   ruff format
   ruff check
 
+# Check formatting and lint (for CI, doesn't modify files).
+lint-check:
+  ruff format --check
+  ruff check
+
 # Run the test suite using pytest.
 test:
   pytest
