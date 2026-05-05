@@ -19,10 +19,6 @@ nav = [
   ]}
 ]
 
-extra_javascript = [
-    "_static/js/marimo-button.js",
-]
-
 [project.theme]
 
 language = "en"
