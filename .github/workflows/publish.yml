@@ -1,4 +1,4 @@
-name: Publish to PyPI
+name: publish
 
 # Disabled: publishing to PyPI is deferred until the name-collision issue is
 # resolved. See README.md for install instructions using GitHub directly.

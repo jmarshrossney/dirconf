@@ -5,7 +5,7 @@ from collections import OrderedDict
 from collections.abc import Callable
 from os import PathLike
 from pathlib import Path
-from typing import Any, Protocol, TypeAlias, runtime_checkable
+from typing import Any, Protocol, runtime_checkable
 
 logger = logging.getLogger(__name__)
 
@@ -31,13 +31,13 @@ class Handler(Protocol):
         ...
 
 
-ReadMethod: TypeAlias = Callable[..., Any]
+type ReadMethod = Callable[..., Any]
 """Type alias for the `read` method of a handler.
 
 Expected signature: `(self, path: str | PathLike) -> Any`
 """
 
-WriteMethod: TypeAlias = Callable[..., None]
+type WriteMethod = Callable[..., None]
 """Type alias for the `write` method of a handler.
 
 Expected signature:
@@ -46,7 +46,7 @@ Note: `Callable` cannot express keyword-only parameters or `self` binding.
 The `overwrite_ok` parameter must be passed as a keyword argument at runtime.
 """
 
-HandlerFactory: TypeAlias = Callable[[], Handler]
+type HandlerFactory = Callable[[], Handler]
 """Type alias for a zero-argument callable that returns a Handler."""
 
 handler_registry: OrderedDict = OrderedDict({})

@@ -4,3 +4,7 @@ __pycache__/
 site/
 *.ipynb
 .coverage
+docs/101.md
+docs/jules.md
+docs/*-notebook.html
+__marimo__/

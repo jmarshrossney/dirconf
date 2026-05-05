@@ -11,7 +11,12 @@ from .handler import Handler, ReadMethod, WriteMethod
 _H = TypeVar("_H", bound=Handler)  # _H is Handler or FilteredHandler
 
 
-MISSING = object()
+class _Missing:
+    def __repr__(self) -> str:
+        return "MISSING"
+
+
+MISSING = _Missing()
 """A sentinel value that may be used in place of missing data."""
 
 
