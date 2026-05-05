@@ -13,7 +13,7 @@ jobs:
       - uses: astral-sh/setup-uv@v8.1.0
         with:
           python-version: "3.12"
-      - run: uv sync --group dev --locked
+      - run: uv sync --group dev --locked # note: dev includes rust-just
       - run: uv run just lint-check
       - run: uv run just typecheck
 
