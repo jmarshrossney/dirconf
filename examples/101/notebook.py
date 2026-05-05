@@ -147,33 +147,33 @@ def _(CsvFileHandler):
 @app.cell(hide_code=True)
 def _(mo):
     mo.md(r"""
-    ### Subclassing `MetaConfig`
+    ### Subclassing `ConfigSchema`
 
     The next step is to specify a valid configuration in terms of its files and handlers.
 
-    To do this we will use the `make_metaconfig` function, which produces a subclass of `MetaConfig` whose fields correspond to the two required files.
+    To do this we will use the `make_config_schema` function, which produces a subclass of `ConfigSchema` whose fields correspond to the two required files.
     """)
     return
 
 
 @app.cell
 def _(CsvFileHandler, YamlFileHandler):
-    from config_foundry import make_metaconfig
+    from config_foundry import make_config_schema
 
-    ConfigHandler = make_metaconfig(
+    ConfigHandler = make_config_schema(
         cls_name="ConfigHandler",
         spec={
             "config": {"path": "config.yml", "handler": YamlFileHandler},
             "data": {"path": "data.csv", "handler": CsvFileHandler},
         },
     )
-    return ConfigHandler, make_metaconfig
+    return ConfigHandler, make_config_schema
 
 
 @app.cell(hide_code=True)
 def _(mo):
     mo.md(r"""
-    ### Working with instances of `MetaConfig`
+    ### Working with instances of `ConfigSchema`
     """)
     return
 
@@ -183,7 +183,7 @@ def _(mo):
     mo.md(r"""
     #### String representation
 
-    Instances of `MetaConfig` have a convenient string representation derived from `MetaConfig.tree`.
+    Instances of `ConfigSchema` have a convenient string representation derived from `ConfigSchema.tree`.
     """)
     return
 
@@ -200,7 +200,7 @@ def _(mo):
     mo.md(r"""
     #### Reading configurations
 
-    Once a `MetaConfig` is instantiated, configurations are read into a `dict` by passing a path to a configuration directory into the `read` method.
+    Once a `ConfigSchema` is instantiated, configurations are read into a `dict` by passing a path to a configuration directory into the `read` method.
     """)
     return
 
@@ -247,7 +247,7 @@ def _(mo):
     mo.md(r"""
     #### Accessing the nodes
 
-    Keep in mind that classes derived from `MetaConfig` as essentially [dataclasses](https://docs.python.org/3/library/dataclasses.html) whose fields are instances of `Node` (itself a dataclass!).
+    Keep in mind that classes derived from `ConfigSchema` as essentially [dataclasses](https://docs.python.org/3/library/dataclasses.html) whose fields are instances of `Node` (itself a dataclass!).
     As such, the usual way of accessing dataclass fields applies.
     """)
     return
@@ -295,8 +295,8 @@ def _(tree):
 
 
 @app.cell
-def _(ConfigHandler, YamlFileHandler, make_metaconfig):
-    NestedHandler = make_metaconfig(
+def _(ConfigHandler, YamlFileHandler, make_config_schema):
+    NestedHandler = make_config_schema(
         cls_name="NestedHandler",
         spec={
             "metadata": {"path": "metadata.yml", "handler": YamlFileHandler},
@@ -328,8 +328,8 @@ def _(mo):
 
 
 @app.cell
-def _(CsvFileHandler, YamlFileHandler, make_metaconfig):
-    UnspecifiedPathHandler = make_metaconfig(
+def _(CsvFileHandler, YamlFileHandler, make_config_schema):
+    UnspecifiedPathHandler = make_config_schema(
         cls_name="UnspecifiedPathHandler",
         spec={
             "config": {"path": "config.yml", "handler": YamlFileHandler},
@@ -396,14 +396,14 @@ def _(PathLike):
 @app.cell(hide_code=True)
 def _(mo):
     mo.md(r"""
-    Now we construct a `MetaConfig` subclass that leaves `config` entirely unspecified.
+    Now we construct a `ConfigSchema` subclass that leaves `config` entirely unspecified.
     """)
     return
 
 
 @app.cell
-def _(CsvFileHandler, make_metaconfig):
-    VariableHandler = make_metaconfig(
+def _(CsvFileHandler, make_config_schema):
+    VariableHandler = make_config_schema(
         cls_name="VariableHandler",
         spec={
             "config": {},
@@ -534,8 +534,8 @@ def _(PathLike):
 
 
 @app.cell
-def _(CsvFileHandler, DummyHandler, YamlFileHandler, make_metaconfig):
-    ConfigHandlerWithOptional = make_metaconfig(
+def _(CsvFileHandler, DummyHandler, YamlFileHandler, make_config_schema):
+    ConfigHandlerWithOptional = make_config_schema(
         cls_name="ConfigHandlerWithOptional",
         spec={
             "config": {"path": "config.yml", "handler": YamlFileHandler},
@@ -652,8 +652,8 @@ def _(mo):
 
 
 @app.cell
-def _(PotentiallyLargeFileHandler, make_metaconfig, tree):
-    ConfigHandlerWithLarge = make_metaconfig(
+def _(PotentiallyLargeFileHandler, make_config_schema, tree):
+    ConfigHandlerWithLarge = make_config_schema(
         cls_name="ConfigHandlerWithLarge",
         spec={
             "a": {"handler": PotentiallyLargeFileHandler},
@@ -679,7 +679,7 @@ def _(mo):
 
 
 @app.cell
-def _(CsvFileHandler, YamlFileHandler, make_metaconfig):
+def _(CsvFileHandler, YamlFileHandler, make_config_schema):
     from config_foundry.filter import filter
 
     @filter(
@@ -689,7 +689,7 @@ def _(CsvFileHandler, YamlFileHandler, make_metaconfig):
     class SaferCsvFileHandler(CsvFileHandler):
         pass
 
-    ConfigHandlerWithAbsPath = make_metaconfig(
+    ConfigHandlerWithAbsPath = make_config_schema(
         cls_name="ConfigHandlerWithAbsPath",
         spec={
             "config": {"path": "config.yml", "handler": YamlFileHandler},
@@ -731,8 +731,8 @@ def _(mo):
 
 
 @app.cell
-def _(CsvFileHandler, YamlFileHandler, filter_missing, make_metaconfig):
-    ConfigHandlerWithMeta = make_metaconfig(
+def _(CsvFileHandler, YamlFileHandler, filter_missing, make_config_schema):
+    ConfigHandlerWithMeta = make_config_schema(
         cls_name="ConfigHandlerWithMeta",
         spec={
             "config": {"path": "config.yml", "handler": YamlFileHandler},

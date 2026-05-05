@@ -13,11 +13,12 @@ logger = logging.getLogger(__name__)
 
 
 @dataclasses.dataclass
-class MetaConfig:
+class ConfigSchema:
     """A base dataclass representing a collection of configuration files.
 
-    This either be subclassed explicitly, i.e. via `class MyConfig(MetaConfig): ...`,
-    or through the [`make_metaconfig`][config_foundry.config.make_metaconfig] function.
+    This either be subclassed explicitly, i.e. via `class MyConfig(ConfigSchema): ...`,
+    or through the [`make_config_schema`][config_foundry.config.make_config_schema]
+    function.
     All fields are expected to be instances of [`Node`][config_foundry.node.Node].
     """
 
@@ -47,7 +48,7 @@ class MetaConfig:
 
         Returns:
           config: The read configuration as a Python `dict`. The keys of the
-            dictionary will be the field names of the `MetaConfig` subclass.
+            dictionary will be the field names of the `ConfigSchema` subclass.
         """
         data = {}
 
@@ -68,7 +69,7 @@ class MetaConfig:
         Arguments:
           path: A path to a directory where the configuration will be written.
             The directory need not yet exist.
-          data: A `dict` whose keys match the field names for this `MetaConfig`,
+          data: A `dict` whose keys match the field names for this `ConfigSchema`,
             and whose values contain the data to be written.
           overwrite_ok: A flag indicating whether overwriting existing files is
             acceptable. Nothing is done with this argument other than to pass it
@@ -92,8 +93,8 @@ class MetaConfig:
         """An iterator over all nodes (fields) in the configuration.
 
         Arguments:
-          recurse: In cases where one or more of the nodes of the `MetaConfig`
-            is a directory whose `Handler` is itself instance of `MetaConfig`,
+          recurse: In cases where one or more of the nodes of the `ConfigSchema`
+            is a directory whose `Handler` is itself instance of `ConfigSchema`,
             passing `recurse=True` will also yield the nodes from these children.
 
         Yields:
@@ -105,7 +106,7 @@ class MetaConfig:
 
             yield node
 
-            if recurse and isinstance(handler := node.handler(), MetaConfig):
+            if recurse and isinstance(handler := node.handler(), ConfigSchema):
                 yield from handler.nodes()
 
     def _tree(
@@ -136,7 +137,7 @@ class MetaConfig:
 
             yield prefix + pointer + field.name + separator + node_repr
 
-            if depth < (max_depth or depth + 1) and isinstance(handler, MetaConfig):
+            if depth < (max_depth or depth + 1) and isinstance(handler, ConfigSchema):
                 extension = pipe if pointer == tee else blank
 
                 yield from handler._tree(
@@ -166,7 +167,7 @@ class MetaConfig:
         return f"{type(self).__module__}.{type(self).__name__}\n{self.tree()}"
 
 
-def _make_metaconfig(cls_name: str, config: dict, **kwargs) -> type[MetaConfig]:
+def _make_config_schema(cls_name: str, config: dict, **kwargs) -> type[ConfigSchema]:
     fields = []
     for name, spec in config.items():
         path = spec.get("path", False)
@@ -209,7 +210,7 @@ def _make_metaconfig(cls_name: str, config: dict, **kwargs) -> type[MetaConfig]:
     return dataclasses.make_dataclass(
         cls_name=cls_name,
         fields=fields,
-        bases=(MetaConfig,),
+        bases=(ConfigSchema,),
         **kwargs,
     )
 
@@ -230,14 +231,14 @@ def _str_is_path(s: str) -> bool:
         return False
 
 
-def make_metaconfig(
+def make_config_schema(
     cls_name: str, spec: dict | str | PathLike, **kwargs: Any
-) -> type[MetaConfig]:
-    """A function that generates subclasses of `MetaConfig`.
+) -> type[ConfigSchema]:
+    """A function that generates subclasses of `ConfigSchema`.
 
     This is a wrapper around
     [`dataclasses.make_dataclass`](https://docs.python.org/3/library/dataclasses.html#dataclasses.make_dataclass)
-    that sets the base class to [config_foundry.config.MetaConfig][] and constructs
+    that sets the base class to [config_foundry.config.ConfigSchema][] and constructs
     fields using the provided `spec`.
 
     Arguments:
@@ -246,17 +247,17 @@ def make_metaconfig(
       kwargs: Additional arguments to pass to `make_dataclass`.
 
     Returns:
-      MetaConfigSubclass: The resulting subclass of `MetaConfig`.
+      ConfigSchemaSubclass: The resulting subclass of `ConfigSchema`.
     """
     if isinstance(spec, dict):
-        return _make_metaconfig(cls_name, spec, **kwargs)
+        return _make_config_schema(cls_name, spec, **kwargs)
 
     if isinstance(spec, str) and _str_is_json(spec):
-        return _make_metaconfig(cls_name, json.loads(spec), **kwargs)
+        return _make_config_schema(cls_name, json.loads(spec), **kwargs)
 
     if isinstance(spec, PathLike) or (isinstance(spec, str) and _str_is_path(spec)):
         with open(spec) as file:
             loaded_spec = json.load(file)
-        return _make_metaconfig(cls_name, loaded_spec, **kwargs)
+        return _make_config_schema(cls_name, loaded_spec, **kwargs)
 
     raise TypeError(f"Unsupported type: {type(spec)}")

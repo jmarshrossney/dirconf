@@ -3,7 +3,7 @@ from pathlib import Path
 
 import pytest
 
-from config_foundry import Handler, MetaConfig, make_metaconfig, register_handler
+from config_foundry import ConfigSchema, Handler, make_config_schema, register_handler
 from config_foundry.config import _str_is_json, _str_is_path
 from config_foundry.handler import handler_registry
 from config_foundry.node import Node
@@ -30,18 +30,18 @@ def clean_registry():
     handler_registry.update(original)
 
 
-class TestMetaConfig:
-    def test_metaconfig_is_handler(self):
-        assert isinstance(MetaConfig(), Handler)
+class TestConfigSchema:
+    def test_config_schema_is_handler(self):
+        assert isinstance(ConfigSchema(), Handler)
 
     def test_tree_empty(self):
-        mc = MetaConfig()
+        mc = ConfigSchema()
         result = mc.tree()
         assert result == ""
 
     def test_tree_with_nodes(self):
         register_handler("simple", SimpleHandler, extensions=[".json"])
-        config = make_metaconfig(
+        config = make_config_schema(
             "TestConfig",
             {"a": {"path": "a.json", "handler": "simple"}},
         )
@@ -50,7 +50,7 @@ class TestMetaConfig:
 
     def test_str(self):
         register_handler("simple", SimpleHandler, extensions=[".json"])
-        config = make_metaconfig(
+        config = make_config_schema(
             "TestConfig",
             {"a": {"path": "a.json", "handler": "simple"}},
         )
@@ -59,7 +59,7 @@ class TestMetaConfig:
 
     def test_nodes(self):
         register_handler("simple", SimpleHandler, extensions=[".json"])
-        config = make_metaconfig(
+        config = make_config_schema(
             "TestConfig",
             {
                 "a": {"path": "a.json", "handler": "simple"},
@@ -74,7 +74,7 @@ class TestMetaConfig:
         register_handler("simple", SimpleHandler, extensions=[".json"])
         (tmp_path / "a.json").write_text('{"key": "value"}')
 
-        config = make_metaconfig(
+        config = make_config_schema(
             "TestConfig",
             {"a": {"path": "a.json", "handler": "simple"}},
         )
@@ -83,7 +83,7 @@ class TestMetaConfig:
 
     def test_write(self, tmp_path):
         register_handler("simple", SimpleHandler, extensions=[".json"])
-        config = make_metaconfig(
+        config = make_config_schema(
             "TestConfig",
             {"a": {"path": "a.json", "handler": "simple"}},
         )
@@ -93,7 +93,7 @@ class TestMetaConfig:
 
     def test_write_creates_directory(self, tmp_path):
         register_handler("simple", SimpleHandler, extensions=[".json"])
-        config = make_metaconfig(
+        config = make_config_schema(
             "TestConfig",
             {"a": {"path": "a.json", "handler": "simple"}},
         )
@@ -103,7 +103,7 @@ class TestMetaConfig:
 
     def test_call(self):
         register_handler("simple", SimpleHandler, extensions=[".json"])
-        config = make_metaconfig(
+        config = make_config_schema(
             "TestConfig",
             {"a": {"path": "a.json", "handler": SimpleHandler}},
         )
@@ -113,38 +113,38 @@ class TestMetaConfig:
         assert result.a.path == instance.a.path  # type: ignore[attr-defined]
 
 
-class TestMakeMetaconfig:
+class TestMakeConfigSchema:
     def test_from_dict(self):
         register_handler("simple", SimpleHandler, extensions=[".json"])
-        config = make_metaconfig(
+        config = make_config_schema(
             "TestConfig",
             {"a": {"path": "a.json", "handler": "simple"}},
         )
-        assert issubclass(config, MetaConfig)
+        assert issubclass(config, ConfigSchema)
 
     def test_from_json_string(self):
         register_handler("simple", SimpleHandler, extensions=[".json"])
         spec = json.dumps({"a": {"path": "a.json", "handler": "simple"}})
-        config = make_metaconfig("TestConfig", spec)
-        assert issubclass(config, MetaConfig)
+        config = make_config_schema("TestConfig", spec)
+        assert issubclass(config, ConfigSchema)
 
     def test_from_json_file(self, tmp_path):
         register_handler("simple", SimpleHandler, extensions=[".json"])
         spec_file = tmp_path / "spec.json"
         spec_file.write_text(json.dumps({"a": {"path": "a.json", "handler": "simple"}}))
-        config = make_metaconfig("TestConfig", spec_file)
-        assert issubclass(config, MetaConfig)
+        config = make_config_schema("TestConfig", spec_file)
+        assert issubclass(config, ConfigSchema)
 
     def test_from_path_string(self, tmp_path):
         register_handler("simple", SimpleHandler, extensions=[".json"])
         spec_file = tmp_path / "spec.json"
         spec_file.write_text(json.dumps({"a": {"path": "a.json", "handler": "simple"}}))
-        config = make_metaconfig("TestConfig", str(spec_file))
-        assert issubclass(config, MetaConfig)
+        config = make_config_schema("TestConfig", str(spec_file))
+        assert issubclass(config, ConfigSchema)
 
     def test_handler_only(self):
         register_handler("simple", SimpleHandler, extensions=[".json"])
-        config = make_metaconfig(
+        config = make_config_schema(
             "TestConfig",
             {"a": {"handler": "simple"}},
         )
@@ -153,7 +153,7 @@ class TestMakeMetaconfig:
 
     def test_neither_path_nor_handler(self):
         register_handler("simple", SimpleHandler, extensions=[".json"])
-        config = make_metaconfig(
+        config = make_config_schema(
             "TestConfig",
             {"a": {}},
         )
@@ -162,11 +162,11 @@ class TestMakeMetaconfig:
 
     def test_path_only_raises(self):
         with pytest.raises(NotImplementedError):
-            make_metaconfig("TestConfig", {"a": {"path": "a.json"}})
+            make_config_schema("TestConfig", {"a": {"path": "a.json"}})
 
     def test_unsupported_spec_type(self):
         with pytest.raises(TypeError, match="Unsupported type"):
-            make_metaconfig("TestConfig", 123)  # type: ignore[arg-type]
+            make_config_schema("TestConfig", 123)  # type: ignore[arg-type]
 
 
 class TestStrIsJson:

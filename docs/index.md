@@ -42,12 +42,12 @@ It has no dependencies other than the Standard Library.
 There are two essential steps for adapting `config-foundry` to a specific use-case.
 
 1. **Define handlers** satisfying the `Handler` protocol for each of the paths (files and directories) present in your configuration.
-2. **Define the structure of a valid configuration** in terms of its paths and their respective handlers, by subclassing the `MetaConfig` class. This is most easily done using the `make_metaconfig` function.
+2. **Define the structure of a valid configuration** in terms of its paths and their respective handlers, by subclassing the `ConfigSchema` class. This is most easily done using the `make_config_schema` function.
 
-The custom `MetaConfig` subclass can then be used to
+The custom `ConfigSchema` subclass can then be used to
 
-1. **Read** a configuration from the filesystem into a Python `dict` (`MetaConfig.read`). 
-2. **Write** a configuration `dict` to the filesystem (`MetaConfig.write`)
+1. **Read** a configuration from the filesystem into a Python `dict` (`ConfigSchema.read`). 
+2. **Write** a configuration `dict` to the filesystem (`ConfigSchema.write`)
 
 These steps are most easily understood through examples. To start with, take a look at the [Usage](101.md) section. More realistic examples can be found in the right navigation bar.
 

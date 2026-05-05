@@ -155,7 +155,7 @@ def _(PathLike):
 @app.cell(hide_code=True)
 def _(mo):
     mo.md(r"""
-    We now construct a `MetaConfig`-based Handler for a namelists directory, in which each `Node` corresponds to a single `.nml` file with a fixed path and handler.
+    We now construct a `ConfigSchema`-based Handler for a namelists directory, in which each `Node` corresponds to a single `.nml` file with a fixed path and handler.
     """)
     return
 
@@ -194,7 +194,7 @@ def _(NamelistFileHandler, config_foundry):
         "urban",
     ]
 
-    NamelistDirectoryHandler = config_foundry.make_metaconfig(
+    NamelistDirectoryHandler = config_foundry.make_config_schema(
         cls_name="NamelistDirectoryHandler",
         spec={
             name: {"path": f"{name}.nml", "handler": NamelistFileHandler}
@@ -207,7 +207,7 @@ def _(NamelistFileHandler, config_foundry):
 @app.cell(hide_code=True)
 def _(mo):
     mo.md(r"""
-    This produces a subclass of `MetaConfig` which is instantiated without any arguments.
+    This produces a subclass of `ConfigSchema` which is instantiated without any arguments.
     """)
     return
 
@@ -400,7 +400,7 @@ def _(AsciiFileHandler, NetcdfFileHandler, config_foundry):
 
 @app.cell
 def _(AsciiFileHandler, config_foundry):
-    InputFilesConfig = config_foundry.make_metaconfig(
+    InputFilesConfig = config_foundry.make_config_schema(
         cls_name="InputFilesConfig",
         spec={
             "initial_conditions": {
@@ -417,7 +417,7 @@ def _(AsciiFileHandler, config_foundry):
 
 @app.cell
 def _(NamelistDirectoryHandler, config_foundry):
-    JulesConfigHandler = config_foundry.make_metaconfig(
+    JulesConfigHandler = config_foundry.make_config_schema(
         cls_name="JulesConfigHandler",
         spec={
             "inputs": {},  # we will fix this upon instantiation

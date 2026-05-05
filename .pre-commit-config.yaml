@@ -11,6 +11,7 @@ repos:
     rev: v1.1.409
     hooks:
       - id: pyright
+        pass_filenames: false
 
   - repo: https://github.com/astral-sh/ruff-pre-commit
     # Ruff version.
