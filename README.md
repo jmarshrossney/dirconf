@@ -1,8 +1,10 @@
 # Config-Foundry
 
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
-[![CI](https://img.shields.io/github/actions/workflow/status/jmarshrossney/config-foundry/ci.yml?branch=main&label=CI)](https://github.com/jmarshrossney/config-foundry/actions)
----
+[![PyPI version](https://img.shields.io/pypi/v/config-foundry)](https://pypi.org/project/config-foundry/)
+[![Python versions](https://img.shields.io/pypi/pyversions/config-foundry)](https://pypi.org/project/config-foundry/)
+[![License](https://img.shields.io/pypi/l/config-foundry)](https://github.com/jmarshrossney/config-foundry/blob/main/LICENSE)
+[![CI](https://github.com/jmarshrossney/config-foundry/actions/workflows/ci.yml/badge.svg)](https://github.com/jmarshrossney/config-foundry/actions/workflows/ci.yml)
+[![Docs](https://github.com/jmarshrossney/config-foundry/actions/workflows/docs.yml/badge.svg)](https://jmarshrossney.github.io/config-foundry)
 
 `config-foundry` is a Python tool for declaratively specifying what a valid configuration directory looks like.
 
@@ -19,35 +21,22 @@ I was (and remain) concerned about how easy it can be to misconfigure certain mo
 
 Configurations are specified using Python [dataclasses](https://docs.python.org/3/library/dataclasses.html); `config-foundry` has no dependencies beyond the standard library.
 
-For user documentation and examples please visit [https://jmarshrossney.github.io/config-foundry/](https://jmarshrossney.github.io/config-foundry/).
+For full user documentation and examples please visit **[https://jmarshrossney.github.io/config-foundry/](https://jmarshrossney.github.io/config-foundry/)**.
 
 ## Installation
 
 ```sh
-pip install git+https://github.com/jmarshrossney/config-foundry.git
+pip install config-foundry
 ```
 
 or with `uv`:
 
 ```sh
-uv add git+https://github.com/jmarshrossney/config-foundry.git
+uv add config-foundry
 ```
 
 or the equivalent command for other package managers (poetry etc).
 
-`config-foundry` is not yet on PyPI; install from GitHub for now. Once published, the installation method below will be replaced with `pip install config-foundry`.
-
-## Updating
-
-```sh
-pip install --upgrade git+https://github.com/jmarshrossney/config-foundry.git
-```
-
-or
-
-```sh
-uv sync --upgrade-package config-foundry
-```
 
 ## Development
 
