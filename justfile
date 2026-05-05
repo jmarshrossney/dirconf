@@ -5,11 +5,15 @@ _:
 lint:
   ruff format
   ruff check
+  marimo check examples/101/notebook.py
+  marimo check examples/jules/notebook.py
 
 # Check formatting and lint (for CI, doesn't modify files).
 lint-check:
   ruff format --check
   ruff check
+  marimo check examples/101/notebook.py
+  marimo check examples/jules/notebook.py
 
 # Run the test suite using pytest.
 test:
@@ -23,10 +27,8 @@ test-cov:
 typecheck:
   pyright
 
-# Build the example notebooks.
-examples:
-  uv run --group examples jupytext --set-formats ipynb,md --execute docs/examples/*/*.md
-
-# Build the documentation and serve it in the browser.
+# Build the documentation.
 docs:
-  uv run mkdocs build
+  cd examples/101/ && marimo-md-export notebook.py ../../docs/101.md --sandbox
+  cd examples/jules/ && marimo-md-export notebook.py ../../docs/jules.md --sandbox
+  zensical build

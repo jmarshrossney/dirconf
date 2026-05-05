@@ -1,0 +1,545 @@
+{
+  "version": "1",
+  "metadata": {
+    "marimo_version": "0.23.5",
+    "script_metadata_hash": "42c3f4975249a5c3014a46819fc90d49"
+  },
+  "cells": [
+    {
+      "id": "Hbol",
+      "code_hash": "1d0db38904205bec4d6f6f6a1f6cec3e",
+      "outputs": [
+        {
+          "type": "data",
+          "data": {
+            "text/plain": ""
+          }
+        }
+      ],
+      "console": []
+    },
+    {
+      "id": "MJUe",
+      "code_hash": "9778b09e5134526a04f2c1641a57649c",
+      "outputs": [
+        {
+          "type": "data",
+          "data": {
+            "text/markdown": "<span class=\"markdown prose dark:prose-invert contents\"><h1 id=\"configuration-of-the-jules-land-surface-model\">Configuration of the JULES land surface model</h1></span>"
+          }
+        }
+      ],
+      "console": []
+    },
+    {
+      "id": "vblA",
+      "code_hash": "301e021cb61e69b8a952287388bfaa5e",
+      "outputs": [
+        {
+          "type": "data",
+          "data": {
+            "text/markdown": "<span class=\"markdown prose dark:prose-invert contents\"><span class=\"paragraph\">Some background about the JULES land surface model.</span>\n<span class=\"paragraph\">Documentation is available at <a href=\"https://jules-lsm.github.io\" rel=\"noopener noreferrer\" target=\"_blank\">https://jules-lsm.github.io</a>.</span></span>"
+          }
+        }
+      ],
+      "console": []
+    },
+    {
+      "id": "bkHC",
+      "code_hash": "7e4bcaeb78d67a492227f9cd1aa21c06",
+      "outputs": [
+        {
+          "type": "data",
+          "data": {
+            "text/plain": ""
+          }
+        }
+      ],
+      "console": []
+    },
+    {
+      "id": "lEQa",
+      "code_hash": "cb5bdded8faeabb56985298c65372233",
+      "outputs": [
+        {
+          "type": "data",
+          "data": {
+            "text/markdown": "<span class=\"markdown prose dark:prose-invert contents\"><h2 id=\"namelists\">Namelists</h2></span>"
+          }
+        }
+      ],
+      "console": []
+    },
+    {
+      "id": "PKri",
+      "code_hash": "c7649c0d226dd6204d25fe350fba3bb2",
+      "outputs": [
+        {
+          "type": "data",
+          "data": {
+            "text/markdown": "<span class=\"markdown prose dark:prose-invert contents\"><span class=\"paragraph\">The JULES executable is run by passing the path to a directory containing these namelists as its sole positional argument,</span>\n<div class=\"language-sh codehilite\"><pre><span></span><code>jules.exe<span class=\"w\"> </span>/path/to/namelists/\n</code></pre></div>\n<span class=\"paragraph\">where <code>namelists/</code> must contain <em>all</em> of the required namelists files,</span>\n<div class=\"language-carbon codehilite\"><pre><span></span><code><span class=\"nx\">namelists</span><span class=\"o\">/</span>\n<span class=\"err\">\u251c\u2500\u2500</span><span class=\"w\"> </span><span class=\"nx\">ancillaries</span><span class=\"p\">.</span><span class=\"nx\">nml</span>\n<span class=\"err\">\u251c\u2500\u2500</span><span class=\"w\"> </span><span class=\"nx\">crop_params</span><span class=\"p\">.</span><span class=\"nx\">nml</span>\n<span class=\"err\">\u251c\u2500\u2500</span><span class=\"w\"> </span><span class=\"nx\">drive</span><span class=\"p\">.</span><span class=\"nx\">nml</span>\n<span class=\"err\">\u251c\u2500\u2500</span><span class=\"w\"> </span><span class=\"nx\">fire</span><span class=\"p\">.</span><span class=\"nx\">nml</span>\n<span class=\"err\">\u251c\u2500\u2500</span><span class=\"w\"> </span><span class=\"nx\">imogen</span><span class=\"p\">.</span><span class=\"nx\">nml</span>\n<span class=\"err\">\u251c\u2500\u2500</span><span class=\"w\"> </span><span class=\"nx\">initial_conditions</span><span class=\"p\">.</span><span class=\"nx\">nml</span>\n<span class=\"err\">\u251c\u2500\u2500</span><span class=\"w\"> </span><span class=\"nx\">jules_deposition</span><span class=\"p\">.</span><span class=\"nx\">nml</span>\n<span class=\"err\">\u251c\u2500\u2500</span><span class=\"w\"> </span><span class=\"nx\">jules_hydrology</span><span class=\"p\">.</span><span class=\"nx\">nml</span>\n<span class=\"err\">\u251c\u2500\u2500</span><span class=\"w\"> </span><span class=\"nx\">jules_irrig</span><span class=\"p\">.</span><span class=\"nx\">nml</span>\n<span class=\"err\">\u251c\u2500\u2500</span><span class=\"w\"> </span><span class=\"nx\">jules_prnt_control</span><span class=\"p\">.</span><span class=\"nx\">nml</span>\n<span class=\"err\">\u251c\u2500\u2500</span><span class=\"w\"> </span><span class=\"nx\">jules_radiation</span><span class=\"p\">.</span><span class=\"nx\">nml</span>\n<span class=\"err\">\u251c\u2500\u2500</span><span class=\"w\"> </span><span class=\"nx\">jules_rivers</span><span class=\"p\">.</span><span class=\"nx\">nml</span>\n<span class=\"err\">\u251c\u2500\u2500</span><span class=\"w\"> </span><span class=\"nx\">jules_snow</span><span class=\"p\">.</span><span class=\"nx\">nml</span>\n<span class=\"err\">\u251c\u2500\u2500</span><span class=\"w\"> </span><span class=\"nx\">jules_soil_biogeochem</span><span class=\"p\">.</span><span class=\"nx\">nml</span>\n<span class=\"err\">\u251c\u2500\u2500</span><span class=\"w\"> </span><span class=\"nx\">jules_soil</span><span class=\"p\">.</span><span class=\"nx\">nml</span>\n<span class=\"err\">\u251c\u2500\u2500</span><span class=\"w\"> </span><span class=\"nx\">jules_surface</span><span class=\"p\">.</span><span class=\"nx\">nml</span>\n<span class=\"err\">\u251c\u2500\u2500</span><span class=\"w\"> </span><span class=\"nx\">jules_surface_types</span><span class=\"p\">.</span><span class=\"nx\">nml</span>\n<span class=\"err\">\u251c\u2500\u2500</span><span class=\"w\"> </span><span class=\"nx\">jules_vegetation</span><span class=\"p\">.</span><span class=\"nx\">nml</span>\n<span class=\"err\">\u251c\u2500\u2500</span><span class=\"w\"> </span><span class=\"nx\">jules_water_resources</span><span class=\"p\">.</span><span class=\"nx\">nml</span>\n<span class=\"err\">\u251c\u2500\u2500</span><span class=\"w\"> </span><span class=\"nx\">model_environment</span><span class=\"p\">.</span><span class=\"nx\">nml</span>\n<span class=\"err\">\u251c\u2500\u2500</span><span class=\"w\"> </span><span class=\"nx\">model_grid</span><span class=\"p\">.</span><span class=\"nx\">nml</span>\n<span class=\"err\">\u251c\u2500\u2500</span><span class=\"w\"> </span><span class=\"nx\">nveg_params</span><span class=\"p\">.</span><span class=\"nx\">nml</span>\n<span class=\"err\">\u251c\u2500\u2500</span><span class=\"w\"> </span><span class=\"nx\">output</span><span class=\"p\">.</span><span class=\"nx\">nml</span>\n<span class=\"err\">\u251c\u2500\u2500</span><span class=\"w\"> </span><span class=\"nx\">pft_params</span><span class=\"p\">.</span><span class=\"nx\">nml</span>\n<span class=\"err\">\u251c\u2500\u2500</span><span class=\"w\"> </span><span class=\"nx\">prescribed_data</span><span class=\"p\">.</span><span class=\"nx\">nml</span>\n<span class=\"err\">\u251c\u2500\u2500</span><span class=\"w\"> </span><span class=\"nx\">science_fixes</span><span class=\"p\">.</span><span class=\"nx\">nml</span>\n<span class=\"err\">\u251c\u2500\u2500</span><span class=\"w\"> </span><span class=\"nx\">timesteps</span><span class=\"p\">.</span><span class=\"nx\">nml</span>\n<span class=\"err\">\u251c\u2500\u2500</span><span class=\"w\"> </span><span class=\"nx\">triffid_params</span><span class=\"p\">.</span><span class=\"nx\">nml</span>\n<span class=\"err\">\u2514\u2500\u2500</span><span class=\"w\"> </span><span class=\"nx\">urban</span><span class=\"p\">.</span><span class=\"nx\">nml</span>\n</code></pre></div>\n<span class=\"paragraph\">!!! note\n    There is no freedom to use different file names for the namelist files; they must be present exactly as specified above.</span></span>"
+          }
+        }
+      ],
+      "console": []
+    },
+    {
+      "id": "Xref",
+      "code_hash": "7948a581e8415af2e4df5e33d03bb789",
+      "outputs": [
+        {
+          "type": "data",
+          "data": {
+            "text/markdown": "<span class=\"markdown prose dark:prose-invert contents\"><span class=\"paragraph\">We will make use of the <a href=\"https://f90nml.readthedocs.io/en/latest/\" rel=\"noopener noreferrer\" target=\"_blank\"><code>f90nml</code></a> Python package<sup id=\"fnref:2-1\"><a class=\"footnote-ref\" href=\"#fn:2-1\">1</a></sup> for reading and writing namelist files.</span>\n<div class=\"footnote\">\n<hr />\n<ol>\n<li id=\"fn:2-1\">Marshall Ward. (2019). marshallward/f90nml: Version 1.1.2 (v1.1.2). Zenodo. <a href=\"https://doi.org/10.5281/zenodo.3245482\" rel=\"noopener noreferrer\" target=\"_blank\">https://doi.org/10.5281/zenodo.3245482</a>&#160;<a class=\"footnote-backref\" href=\"#fnref:2-1\" title=\"Jump back to footnote 1 in the text\">&#8617;</a></li>\n</ol>\n</div></span>"
+          }
+        }
+      ],
+      "console": []
+    },
+    {
+      "id": "SFPL",
+      "code_hash": "8b3c06ff4334add9dd8cd79665cc2fe6",
+      "outputs": [
+        {
+          "type": "data",
+          "data": {
+            "text/plain": ""
+          }
+        }
+      ],
+      "console": []
+    },
+    {
+      "id": "BYtC",
+      "code_hash": "d2bc99dd873599c57330f3bfb7216cf2",
+      "outputs": [
+        {
+          "type": "data",
+          "data": {
+            "text/markdown": "<span class=\"markdown prose dark:prose-invert contents\"><span class=\"paragraph\">We now construct a <code>MetaConfig</code>-based Handler for a namelists directory, in which each <code>Node</code> corresponds to a single <code>.nml</code> file with a fixed path and handler.</span></span>"
+          }
+        }
+      ],
+      "console": []
+    },
+    {
+      "id": "RGSE",
+      "code_hash": "b168c698dd4699a001358e536d203bc9",
+      "outputs": [
+        {
+          "type": "data",
+          "data": {
+            "text/plain": ""
+          }
+        }
+      ],
+      "console": []
+    },
+    {
+      "id": "Kclp",
+      "code_hash": "2fb00ed95bfab520fe1cbdd976b8408f",
+      "outputs": [
+        {
+          "type": "data",
+          "data": {
+            "text/markdown": "<span class=\"markdown prose dark:prose-invert contents\"><span class=\"paragraph\">This produces a subclass of <code>MetaConfig</code> which is instantiated without any arguments.</span></span>"
+          }
+        }
+      ],
+      "console": []
+    },
+    {
+      "id": "emfo",
+      "code_hash": "69076ae16d3cf84e49c1793e65aba8f0",
+      "outputs": [
+        {
+          "type": "data",
+          "data": {
+            "text/plain": ""
+          }
+        }
+      ],
+      "console": [
+        {
+          "type": "stream",
+          "name": "stdout",
+          "text": "config_foundry.config.NamelistDirectoryHandler\n\u251c\u2500\u2500ancillaries -------------- (path='ancillaries.nml', handler=NamelistFileHandler)\n\u251c\u2500\u2500crop_params -------------- (path='crop_params.nml', handler=NamelistFileHandler)\n\u251c\u2500\u2500drive -------------------- (path='drive.nml', handler=NamelistFileHandler)\n\u251c\u2500\u2500fire --------------------- (path='fire.nml', handler=NamelistFileHandler)\n\u251c\u2500\u2500imogen ------------------- (path='imogen.nml', handler=NamelistFileHandler)\n\u251c\u2500\u2500initial_conditions ------- (path='initial_conditions.nml', handler=NamelistFileHandler)\n\u251c\u2500\u2500jules_deposition --------- (path='jules_deposition.nml', handler=NamelistFileHandler)\n\u251c\u2500\u2500jules_hydrology ---------- (path='jules_hydrology.nml', handler=NamelistFileHandler)\n\u251c\u2500\u2500jules_irrig -------------- (path='jules_irrig.nml', handler=NamelistFileHandler)\n\u251c\u2500\u2500jules_prnt_control ------- (path='jules_prnt_control.nml', handler=NamelistFileHandler)\n\u251c\u2500\u2500jules_radiation ---------- (path='jules_radiation.nml', handler=NamelistFileHandler)\n\u251c\u2500\u2500jules_rivers ------------- (path='jules_rivers.nml', handler=NamelistFileHandler)\n\u251c\u2500\u2500jules_snow --------------- (path='jules_snow.nml', handler=NamelistFileHandler)\n\u251c\u2500\u2500jules_soil_biogeochem ---- (path='jules_soil_biogeochem.nml', handler=NamelistFileHandler)\n\u251c\u2500\u2500jules_soil --------------- (path='jules_soil.nml', handler=NamelistFileHandler)\n\u251c\u2500\u2500jules_surface ------------ (path='jules_surface.nml', handler=NamelistFileHandler)\n\u251c\u2500\u2500jules_surface_types ------ (path='jules_surface_types.nml', handler=NamelistFileHandler)\n\u251c\u2500\u2500jules_vegetation --------- (path='jules_vegetation.nml', handler=NamelistFileHandler)\n\u251c\u2500\u2500jules_water_resources ---- (path='jules_water_resources.nml', handler=NamelistFileHandler)\n\u251c\u2500\u2500model_environment -------- (path='model_environment.nml', handler=NamelistFileHandler)\n\u251c\u2500\u2500model_grid --------------- (path='model_grid.nml', handler=NamelistFileHandler)\n\u251c\u2500\u2500nveg_params -------------- (path='nveg_params.nml', handler=NamelistFileHandler)\n\u251c\u2500\u2500output ------------------- (path='output.nml', handler=NamelistFileHandler)\n\u251c\u2500\u2500pft_params --------------- (path='pft_params.nml', handler=NamelistFileHandler)\n\u251c\u2500\u2500prescribed_data ---------- (path='prescribed_data.nml', handler=NamelistFileHandler)\n\u251c\u2500\u2500science_fixes ------------ (path='science_fixes.nml', handler=NamelistFileHandler)\n\u251c\u2500\u2500timesteps ---------------- (path='timesteps.nml', handler=NamelistFileHandler)\n\u251c\u2500\u2500triffid_params ----------- (path='triffid_params.nml', handler=NamelistFileHandler)\n\u2514\u2500\u2500urban -------------------- (path='urban.nml', handler=NamelistFileHandler)\n",
+          "mimetype": "text/plain"
+        }
+      ]
+    },
+    {
+      "id": "Hstk",
+      "code_hash": "284b310d60ca6eef4909594b0633ce73",
+      "outputs": [
+        {
+          "type": "data",
+          "data": {
+            "text/markdown": "<span class=\"markdown prose dark:prose-invert contents\"><span class=\"paragraph\">We can now use this handler to read an entire namelists directory into a Python dict.</span></span>"
+          }
+        }
+      ],
+      "console": []
+    },
+    {
+      "id": "nWHF",
+      "code_hash": "b9ff222d893c3d258fa11103479c8d50",
+      "outputs": [
+        {
+          "type": "data",
+          "data": {
+            "text/html": "<pre class='text-xs'>dict_keys([&#x27;ancillaries&#x27;, &#x27;crop_params&#x27;, &#x27;drive&#x27;, &#x27;fire&#x27;, &#x27;imogen&#x27;, &#x27;initial_conditions&#x27;, &#x27;jules_deposition&#x27;, &#x27;jules_hydrology&#x27;, &#x27;jules_irrig&#x27;, &#x27;jules_prnt_control&#x27;, &#x27;jules_radiation&#x27;, &#x27;jules_rivers&#x27;, &#x27;jules_snow&#x27;, &#x27;jules_soil_biogeochem&#x27;, &#x27;jules_soil&#x27;, &#x27;jules_surface&#x27;, &#x27;jules_surface_types&#x27;, &#x27;jules_vegetation&#x27;, &#x27;jules_water_resources&#x27;, &#x27;model_environment&#x27;, &#x27;model_grid&#x27;, &#x27;nveg_params&#x27;, &#x27;output&#x27;, &#x27;pft_params&#x27;, &#x27;prescribed_data&#x27;, &#x27;science_fixes&#x27;, &#x27;timesteps&#x27;, &#x27;triffid_params&#x27;, &#x27;urban&#x27;])</pre>"
+          }
+        }
+      ],
+      "console": []
+    },
+    {
+      "id": "iLit",
+      "code_hash": "ef5fbc4f382447a902c83c6879db1862",
+      "outputs": [
+        {
+          "type": "data",
+          "data": {
+            "text/html": "<pre class='text-xs'>OrderedDict({&#x27;jules_drive&#x27;: OrderedDict({&#x27;file&#x27;: &#x27;inputs/Loobos_1997.dat&#x27;, &#x27;data_start&#x27;: &#x27;1996-12-31 23:00:00&#x27;, &#x27;data_end&#x27;: &#x27;1997-12-31 23:00:00&#x27;, &#x27;data_period&#x27;: 1800, &#x27;nvars&#x27;: 8, &#x27;var&#x27;: [&#x27;sw_down&#x27;, &#x27;lw_down&#x27;, &#x27;tot_rain&#x27;, &#x27;tot_snow&#x27;, &#x27;t&#x27;, &#x27;wind&#x27;, &#x27;pstar&#x27;, &#x27;q&#x27;], &#x27;interp&#x27;: [&#x27;nf&#x27;, &#x27;nf&#x27;, &#x27;nf&#x27;, &#x27;nf&#x27;, &#x27;nf&#x27;, &#x27;nf&#x27;, &#x27;nf&#x27;, &#x27;nf&#x27;], &#x27;diff_frac_const&#x27;: 0.4, &#x27;t_for_con_rain&#x27;: 293.15, &#x27;z1_uv_in&#x27;: 10.0, &#x27;z1_tq_in&#x27;: 10.0})})</pre>"
+          }
+        }
+      ],
+      "console": []
+    },
+    {
+      "id": "ZHCJ",
+      "code_hash": "47d5562d78fa0fc9b38b981a897e15cc",
+      "outputs": [
+        {
+          "type": "data",
+          "data": {
+            "text/markdown": "<span class=\"markdown prose dark:prose-invert contents\"><h2 id=\"input-data\">Input data</h2></span>"
+          }
+        }
+      ],
+      "console": []
+    },
+    {
+      "id": "ROlb",
+      "code_hash": "bd996fa4fd26ff98835fffd6cca01bb6",
+      "outputs": [
+        {
+          "type": "data",
+          "data": {
+            "text/markdown": "<span class=\"markdown prose dark:prose-invert contents\"><h3 id=\"ascii-input-data\">Ascii input data</h3></span>"
+          }
+        }
+      ],
+      "console": []
+    },
+    {
+      "id": "qnkX",
+      "code_hash": "c66470d2b74e26858ae2581c1065b6c5",
+      "outputs": [
+        {
+          "type": "data",
+          "data": {
+            "text/markdown": "<span class=\"markdown prose dark:prose-invert contents\"><span class=\"paragraph\">JULES also requires</span>\n<span class=\"paragraph\">We can use <code>numpy</code> to read and write floating point ascii data.</span></span>"
+          }
+        }
+      ],
+      "console": []
+    },
+    {
+      "id": "TqIu",
+      "code_hash": "d87afe5446f50769053ee19025746056",
+      "outputs": [
+        {
+          "type": "data",
+          "data": {
+            "text/plain": ""
+          }
+        }
+      ],
+      "console": []
+    },
+    {
+      "id": "Vxnm",
+      "code_hash": "3f0799b91cead96683bf35afae080827",
+      "outputs": [
+        {
+          "type": "data",
+          "data": {
+            "text/markdown": "<span class=\"markdown prose dark:prose-invert contents\"><h3 id=\"netcdf-input-data\">NetCDF input data</h3></span>"
+          }
+        }
+      ],
+      "console": []
+    },
+    {
+      "id": "DnEU",
+      "code_hash": "f5d2b8fbfa12f4b32bd57d4117149271",
+      "outputs": [
+        {
+          "type": "data",
+          "data": {
+            "text/markdown": "<span class=\"markdown prose dark:prose-invert contents\"><span class=\"paragraph\">We will use <code>xarray</code> to read and write input data in the <code>netCDF</code> format.</span></span>"
+          }
+        }
+      ],
+      "console": []
+    },
+    {
+      "id": "ulZA",
+      "code_hash": "4b073ea57da95a16ceb9e3e364c2afdc",
+      "outputs": [
+        {
+          "type": "data",
+          "data": {
+            "text/plain": ""
+          }
+        }
+      ],
+      "console": []
+    },
+    {
+      "id": "ecfG",
+      "code_hash": "4469f41345a275a2abaa3079c693b5d7",
+      "outputs": [
+        {
+          "type": "data",
+          "data": {
+            "text/markdown": "<span class=\"markdown prose dark:prose-invert contents\"><h2 id=\"putting-it-together\">Putting it together</h2></span>"
+          }
+        }
+      ],
+      "console": []
+    },
+    {
+      "id": "Pvdt",
+      "code_hash": "f9313a76fb00d061cdefd79f6f77e607",
+      "outputs": [
+        {
+          "type": "data",
+          "data": {
+            "text/plain": ""
+          }
+        }
+      ],
+      "console": []
+    },
+    {
+      "id": "ZBYS",
+      "code_hash": "7a8679b049aefd1717fc19d57599125d",
+      "outputs": [
+        {
+          "type": "data",
+          "data": {
+            "text/plain": ""
+          }
+        }
+      ],
+      "console": []
+    },
+    {
+      "id": "aLJB",
+      "code_hash": "9e7819b2509d6529b118bb28bdb2cc8c",
+      "outputs": [
+        {
+          "type": "data",
+          "data": {
+            "text/plain": ""
+          }
+        }
+      ],
+      "console": []
+    },
+    {
+      "id": "nHfw",
+      "code_hash": "74786b43b526d1eae2271dba5bef6695",
+      "outputs": [
+        {
+          "type": "data",
+          "data": {
+            "text/markdown": "<span class=\"markdown prose dark:prose-invert contents\"><h2 id=\"reading-an-existing-configuration\">Reading an existing configuration</h2></span>"
+          }
+        }
+      ],
+      "console": []
+    },
+    {
+      "id": "xXTn",
+      "code_hash": "35deb7b848595cc7f7ed9db6780411e4",
+      "outputs": [
+        {
+          "type": "data",
+          "data": {
+            "text/plain": ""
+          }
+        }
+      ],
+      "console": [
+        {
+          "type": "stream",
+          "name": "stdout",
+          "text": "./config\n\u251c\u2500\u2500inputs\n\u2502  \u251c\u2500\u2500Loobos_1997.dat\n\u2502  \u251c\u2500\u2500Loobos_1997.nc\n\u2502  \u251c\u2500\u2500initial_conditions.dat\n\u2502  \u2514\u2500\u2500tile_fractions.dat\n\u2514\u2500\u2500namelists\n   \u251c\u2500\u2500ancillaries.nml\n   \u251c\u2500\u2500crop_params.nml\n   \u251c\u2500\u2500drive.nml\n   \u251c\u2500\u2500fire.nml\n   \u251c\u2500\u2500imogen.nml\n   \u251c\u2500\u2500initial_conditions.nml\n   \u251c\u2500\u2500jules_deposition.nml\n   \u251c\u2500\u2500jules_hydrology.nml\n   \u251c\u2500\u2500jules_irrig.nml\n   \u251c\u2500\u2500jules_prnt_control.nml\n   \u251c\u2500\u2500jules_radiation.nml\n   \u251c\u2500\u2500jules_rivers.nml\n   \u251c\u2500\u2500jules_snow.nml\n   \u251c\u2500\u2500jules_soil.nml\n   \u251c\u2500\u2500jules_soil_biogeochem.nml\n   \u251c\u2500\u2500jules_surface.nml\n   \u251c\u2500\u2500jules_surface_types.nml\n   \u251c\u2500\u2500jules_vegetation.nml\n   \u251c\u2500\u2500jules_water_resources.nml\n   \u251c\u2500\u2500model_environment.nml\n   \u251c\u2500\u2500model_grid.nml\n   \u251c\u2500\u2500nveg_params.nml\n   \u251c\u2500\u2500output.nml\n   \u251c\u2500\u2500pft_params.nml\n   \u251c\u2500\u2500prescribed_data.nml\n   \u251c\u2500\u2500science_fixes.nml\n   \u251c\u2500\u2500timesteps.nml\n   \u251c\u2500\u2500triffid_params.nml\n   \u2514\u2500\u2500urban.nml\n",
+          "mimetype": "text/plain"
+        }
+      ]
+    },
+    {
+      "id": "AjVT",
+      "code_hash": "78722de3c6479e3a1e3746665f3b397a",
+      "outputs": [
+        {
+          "type": "data",
+          "data": {
+            "text/plain": ""
+          }
+        }
+      ],
+      "console": [
+        {
+          "type": "stream",
+          "name": "stdout",
+          "text": "config_foundry.config.JulesConfigHandler\n\u251c\u2500\u2500inputs ------- (path='inputs', handler=InputFilesConfig)\n\u2502  \u251c\u2500\u2500initial_conditions ---- (path='initial_conditions.dat', handler=AsciiFileHandler)\n\u2502  \u251c\u2500\u2500tile_fractions -------- (path='tile_fractions.dat', handler=AsciiFileHandler)\n\u2502  \u2514\u2500\u2500driving_data ---------- (path='Loobos_1997.dat', handler=AsciiFileHandler)\n\u2514\u2500\u2500namelists ---- (path='namelists', handler=NamelistDirectoryHandler)\n   \u251c\u2500\u2500ancillaries -------------- (path='ancillaries.nml', handler=NamelistFileHandler)\n   \u251c\u2500\u2500crop_params -------------- (path='crop_params.nml', handler=NamelistFileHandler)\n   \u251c\u2500\u2500drive -------------------- (path='drive.nml', handler=NamelistFileHandler)\n   \u251c\u2500\u2500fire --------------------- (path='fire.nml', handler=NamelistFileHandler)\n   \u251c\u2500\u2500imogen ------------------- (path='imogen.nml', handler=NamelistFileHandler)\n   \u251c\u2500\u2500initial_conditions ------- (path='initial_conditions.nml', handler=NamelistFileHandler)\n   \u251c\u2500\u2500jules_deposition --------- (path='jules_deposition.nml', handler=NamelistFileHandler)\n   \u251c\u2500\u2500jules_hydrology ---------- (path='jules_hydrology.nml', handler=NamelistFileHandler)\n   \u251c\u2500\u2500jules_irrig -------------- (path='jules_irrig.nml', handler=NamelistFileHandler)\n   \u251c\u2500\u2500jules_prnt_control ------- (path='jules_prnt_control.nml', handler=NamelistFileHandler)\n   \u251c\u2500\u2500jules_radiation ---------- (path='jules_radiation.nml', handler=NamelistFileHandler)\n   \u251c\u2500\u2500jules_rivers ------------- (path='jules_rivers.nml', handler=NamelistFileHandler)\n   \u251c\u2500\u2500jules_snow --------------- (path='jules_snow.nml', handler=NamelistFileHandler)\n   \u251c\u2500\u2500jules_soil_biogeochem ---- (path='jules_soil_biogeochem.nml', handler=NamelistFileHandler)\n   \u251c\u2500\u2500jules_soil --------------- (path='jules_soil.nml', handler=NamelistFileHandler)\n   \u251c\u2500\u2500jules_surface ------------ (path='jules_surface.nml', handler=NamelistFileHandler)\n   \u251c\u2500\u2500jules_surface_types ------ (path='jules_surface_types.nml', handler=NamelistFileHandler)\n   \u251c\u2500\u2500jules_vegetation --------- (path='jules_vegetation.nml', handler=NamelistFileHandler)\n   \u251c\u2500\u2500jules_water_resources ---- (path='jules_water_resources.nml', handler=NamelistFileHandler)\n   \u251c\u2500\u2500model_environment -------- (path='model_environment.nml', handler=NamelistFileHandler)\n   \u251c\u2500\u2500model_grid --------------- (path='model_grid.nml', handler=NamelistFileHandler)\n   \u251c\u2500\u2500nveg_params -------------- (path='nveg_params.nml', handler=NamelistFileHandler)\n   \u251c\u2500\u2500output ------------------- (path='output.nml', handler=NamelistFileHandler)\n   \u251c\u2500\u2500pft_params --------------- (path='pft_params.nml', handler=NamelistFileHandler)\n   \u251c\u2500\u2500prescribed_data ---------- (path='prescribed_data.nml', handler=NamelistFileHandler)\n   \u251c\u2500\u2500science_fixes ------------ (path='science_fixes.nml', handler=NamelistFileHandler)\n   \u251c\u2500\u2500timesteps ---------------- (path='timesteps.nml', handler=NamelistFileHandler)\n   \u251c\u2500\u2500triffid_params ----------- (path='triffid_params.nml', handler=NamelistFileHandler)\n   \u2514\u2500\u2500urban -------------------- (path='urban.nml', handler=NamelistFileHandler)\n",
+          "mimetype": "text/plain"
+        }
+      ]
+    },
+    {
+      "id": "pHFh",
+      "code_hash": "b9f1c5c8a370f6e3efc3a5e488e48b14",
+      "outputs": [
+        {
+          "type": "data",
+          "data": {
+            "text/html": "<pre class='text-xs'>dict_keys([&#x27;inputs&#x27;, &#x27;namelists&#x27;])</pre>"
+          }
+        }
+      ],
+      "console": []
+    },
+    {
+      "id": "NCOB",
+      "code_hash": "f65bfaf4ab6dc28598cc478e83a024ad",
+      "outputs": [
+        {
+          "type": "data",
+          "data": {
+            "text/markdown": "<span class=\"markdown prose dark:prose-invert contents\"><h2 id=\"reading-with-netcdf\">Reading with netcdf</h2></span>"
+          }
+        }
+      ],
+      "console": []
+    },
+    {
+      "id": "aqbW",
+      "code_hash": "0c72cbbf0399f521a1b1c1a43b48852c",
+      "outputs": [
+        {
+          "type": "data",
+          "data": {
+            "text/plain": ""
+          }
+        }
+      ],
+      "console": [
+        {
+          "type": "stream",
+          "name": "stdout",
+          "text": "config_foundry.config.JulesConfigHandler\n\u251c\u2500\u2500inputs ------- (path='inputs', handler=InputFilesConfig)\n\u2502  \u251c\u2500\u2500initial_conditions ---- (path='initial_conditions.dat', handler=AsciiFileHandler)\n\u2502  \u251c\u2500\u2500tile_fractions -------- (path='tile_fractions.dat', handler=AsciiFileHandler)\n\u2502  \u2514\u2500\u2500driving_data ---------- (path='Loobos_1997.nc', handler=NetcdfFileHandler)\n\u2514\u2500\u2500namelists ---- (path='namelists', handler=NamelistDirectoryHandler)\n   \u251c\u2500\u2500ancillaries -------------- (path='ancillaries.nml', handler=NamelistFileHandler)\n   \u251c\u2500\u2500crop_params -------------- (path='crop_params.nml', handler=NamelistFileHandler)\n   \u251c\u2500\u2500drive -------------------- (path='drive.nml', handler=NamelistFileHandler)\n   \u251c\u2500\u2500fire --------------------- (path='fire.nml', handler=NamelistFileHandler)\n   \u251c\u2500\u2500imogen ------------------- (path='imogen.nml', handler=NamelistFileHandler)\n   \u251c\u2500\u2500initial_conditions ------- (path='initial_conditions.nml', handler=NamelistFileHandler)\n   \u251c\u2500\u2500jules_deposition --------- (path='jules_deposition.nml', handler=NamelistFileHandler)\n   \u251c\u2500\u2500jules_hydrology ---------- (path='jules_hydrology.nml', handler=NamelistFileHandler)\n   \u251c\u2500\u2500jules_irrig -------------- (path='jules_irrig.nml', handler=NamelistFileHandler)\n   \u251c\u2500\u2500jules_prnt_control ------- (path='jules_prnt_control.nml', handler=NamelistFileHandler)\n   \u251c\u2500\u2500jules_radiation ---------- (path='jules_radiation.nml', handler=NamelistFileHandler)\n   \u251c\u2500\u2500jules_rivers ------------- (path='jules_rivers.nml', handler=NamelistFileHandler)\n   \u251c\u2500\u2500jules_snow --------------- (path='jules_snow.nml', handler=NamelistFileHandler)\n   \u251c\u2500\u2500jules_soil_biogeochem ---- (path='jules_soil_biogeochem.nml', handler=NamelistFileHandler)\n   \u251c\u2500\u2500jules_soil --------------- (path='jules_soil.nml', handler=NamelistFileHandler)\n   \u251c\u2500\u2500jules_surface ------------ (path='jules_surface.nml', handler=NamelistFileHandler)\n   \u251c\u2500\u2500jules_surface_types ------ (path='jules_surface_types.nml', handler=NamelistFileHandler)\n   \u251c\u2500\u2500jules_vegetation --------- (path='jules_vegetation.nml', handler=NamelistFileHandler)\n   \u251c\u2500\u2500jules_water_resources ---- (path='jules_water_resources.nml', handler=NamelistFileHandler)\n   \u251c\u2500\u2500model_environment -------- (path='model_environment.nml', handler=NamelistFileHandler)\n   \u251c\u2500\u2500model_grid --------------- (path='model_grid.nml', handler=NamelistFileHandler)\n   \u251c\u2500\u2500nveg_params -------------- (path='nveg_params.nml', handler=NamelistFileHandler)\n   \u251c\u2500\u2500output ------------------- (path='output.nml', handler=NamelistFileHandler)\n   \u251c\u2500\u2500pft_params --------------- (path='pft_params.nml', handler=NamelistFileHandler)\n   \u251c\u2500\u2500prescribed_data ---------- (path='prescribed_data.nml', handler=NamelistFileHandler)\n   \u251c\u2500\u2500science_fixes ------------ (path='science_fixes.nml', handler=NamelistFileHandler)\n   \u251c\u2500\u2500timesteps ---------------- (path='timesteps.nml', handler=NamelistFileHandler)\n   \u251c\u2500\u2500triffid_params ----------- (path='triffid_params.nml', handler=NamelistFileHandler)\n   \u2514\u2500\u2500urban -------------------- (path='urban.nml', handler=NamelistFileHandler)\n",
+          "mimetype": "text/plain"
+        }
+      ]
+    },
+    {
+      "id": "TRpd",
+      "code_hash": "0443e4c938d6f6fa95d2d4e63a1b4534",
+      "outputs": [
+        {
+          "type": "error",
+          "ename": "exception",
+          "evalue": "found the following matches with the input file in xarray's IO backends: ['netcdf4', 'h5netcdf']. But their dependencies may not be installed, see:\nhttps://docs.xarray.dev/en/stable/user-guide/io.html \nhttps://docs.xarray.dev/en/stable/getting-started-guide/installing.html",
+          "traceback": null
+        }
+      ],
+      "console": [
+        {
+          "type": "stream",
+          "name": "stderr",
+          "text": "<span class=\"codehilite\"><div class=\"highlight\"><pre><span></span><span class=\"gt\">Traceback (most recent call last):</span>\n  File <span class=\"nb\">&quot;/tmp/marimo_49692/__marimo__cell_TRpd_.py&quot;</span>, line <span class=\"m\">2</span>, in <span class=\"n\">&lt;module&gt;</span>\n<span class=\"w\">    </span><span class=\"n\">config_1</span> <span class=\"o\">=</span> <span class=\"n\">handler_1</span><span class=\"o\">.</span><span class=\"n\">read</span><span class=\"p\">(</span><span class=\"s2\">&quot;./config&quot;</span><span class=\"p\">)</span>\n  File <span class=\"nb\">&quot;/home/joe/github.com/jmarshrossney/config-foundry/src/config_foundry/config.py&quot;</span>, line <span class=\"m\">59</span>, in <span class=\"n\">read</span>\n<span class=\"w\">    </span><span class=\"n\">data</span><span class=\"p\">[</span><span class=\"n\">field</span><span class=\"o\">.</span><span class=\"n\">name</span><span class=\"p\">]</span> <span class=\"o\">=</span> <span class=\"n\">handler</span><span class=\"o\">.</span><span class=\"n\">read</span><span class=\"p\">(</span><span class=\"n\">config</span><span class=\"o\">.</span><span class=\"n\">path</span><span class=\"p\">)</span>\n<span class=\"w\">                       </span><span class=\"pm\">~~~~~~~~~~~~^^^^^^^^^^^^^</span>\n  File <span class=\"nb\">&quot;/home/joe/github.com/jmarshrossney/config-foundry/src/config_foundry/config.py&quot;</span>, line <span class=\"m\">59</span>, in <span class=\"n\">read</span>\n<span class=\"w\">    </span><span class=\"n\">data</span><span class=\"p\">[</span><span class=\"n\">field</span><span class=\"o\">.</span><span class=\"n\">name</span><span class=\"p\">]</span> <span class=\"o\">=</span> <span class=\"n\">handler</span><span class=\"o\">.</span><span class=\"n\">read</span><span class=\"p\">(</span><span class=\"n\">config</span><span class=\"o\">.</span><span class=\"n\">path</span><span class=\"p\">)</span>\n<span class=\"w\">                       </span><span class=\"pm\">~~~~~~~~~~~~^^^^^^^^^^^^^</span>\n  File <span class=\"nb\">&quot;/home/joe/github.com/jmarshrossney/config-foundry/src/config_foundry/filter.py&quot;</span>, line <span class=\"m\">67</span>, in <span class=\"n\">wrapped_read</span>\n<span class=\"w\">    </span><span class=\"k\">return</span> <span class=\"n\">original_read</span><span class=\"p\">(</span><span class=\"bp\">self</span><span class=\"p\">,</span> <span class=\"n\">path</span><span class=\"p\">)</span>\n  File <span class=\"nb\">&quot;/home/joe/github.com/jmarshrossney/config-foundry/src/config_foundry/filter.py&quot;</span>, line <span class=\"m\">67</span>, in <span class=\"n\">wrapped_read</span>\n<span class=\"w\">    </span><span class=\"k\">return</span> <span class=\"n\">original_read</span><span class=\"p\">(</span><span class=\"bp\">self</span><span class=\"p\">,</span> <span class=\"n\">path</span><span class=\"p\">)</span>\n  File <span class=\"nb\">&quot;/tmp/marimo_49692/__marimo__cell_ulZA_.py&quot;</span>, line <span class=\"m\">10</span>, in <span class=\"n\">read</span>\n<span class=\"w\">    </span><span class=\"n\">dataset</span> <span class=\"o\">=</span> <span class=\"n\">xarray</span><span class=\"o\">.</span><span class=\"n\">load_dataset</span><span class=\"p\">(</span><span class=\"n\">path</span><span class=\"p\">)</span>\n  File <span class=\"nb\">&quot;/home/joe/.cache/uv/archive-v0/votsLcc4QQZPpmLX2G8Gl/lib/python3.13/site-packages/xarray/backends/api.py&quot;</span>, line <span class=\"m\">165</span>, in <span class=\"n\">load_dataset</span>\n<span class=\"w\">    </span><span class=\"k\">with</span> <span class=\"n\">open_dataset</span><span class=\"p\">(</span><span class=\"n\">filename_or_obj</span><span class=\"p\">,</span> <span class=\"o\">**</span><span class=\"n\">kwargs</span><span class=\"p\">)</span> <span class=\"k\">as</span> <span class=\"n\">ds</span><span class=\"p\">:</span>\n<span class=\"w\">         </span><span class=\"pm\">~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^</span>\n  File <span class=\"nb\">&quot;/home/joe/.cache/uv/archive-v0/votsLcc4QQZPpmLX2G8Gl/lib/python3.13/site-packages/xarray/backends/api.py&quot;</span>, line <span class=\"m\">588</span>, in <span class=\"n\">open_dataset</span>\n<span class=\"w\">    </span><span class=\"n\">engine</span> <span class=\"o\">=</span> <span class=\"n\">plugins</span><span class=\"o\">.</span><span class=\"n\">guess_engine</span><span class=\"p\">(</span><span class=\"n\">filename_or_obj</span><span class=\"p\">)</span>\n  File <span class=\"nb\">&quot;/home/joe/.cache/uv/archive-v0/votsLcc4QQZPpmLX2G8Gl/lib/python3.13/site-packages/xarray/backends/plugins.py&quot;</span>, line <span class=\"m\">217</span>, in <span class=\"n\">guess_engine</span>\n<span class=\"w\">    </span><span class=\"k\">raise</span> <span class=\"ne\">ValueError</span><span class=\"p\">(</span><span class=\"n\">error_msg</span><span class=\"p\">)</span>\n<span class=\"gr\">ValueError</span>: <span class=\"n\">found the following matches with the input file in xarray&#39;s IO backends: [&#39;netcdf4&#39;, &#39;h5netcdf&#39;]. But their dependencies may not be installed, see:</span>\n<span class=\"x\">https://docs.xarray.dev/en/stable/user-guide/io.html </span>\n<span class=\"x\">https://docs.xarray.dev/en/stable/getting-started-guide/installing.html</span>\n</pre></div>\n</span>",
+          "mimetype": "application/vnd.marimo+traceback"
+        }
+      ]
+    },
+    {
+      "id": "TXez",
+      "code_hash": "a2bb60bae4d86589fdd69d5d41055349",
+      "outputs": [
+        {
+          "type": "error",
+          "ename": "exception",
+          "evalue": "An ancestor raised an exception (ValueError): ",
+          "traceback": null
+        }
+      ],
+      "console": []
+    },
+    {
+      "id": "dNNg",
+      "code_hash": "e6799fa35f751804c5fb4bdfa20bbf67",
+      "outputs": [
+        {
+          "type": "data",
+          "data": {
+            "text/markdown": "<span class=\"markdown prose dark:prose-invert contents\"><h2 id=\"writing-a-new-configuration\">Writing a new configuration</h2></span>"
+          }
+        }
+      ],
+      "console": []
+    },
+    {
+      "id": "yCnT",
+      "code_hash": "a97be500fa36bceb095290680f85611c",
+      "outputs": [
+        {
+          "type": "data",
+          "data": {
+            "text/markdown": "<span class=\"markdown prose dark:prose-invert contents\"><span class=\"paragraph\">We will now demonstrate how to generate a new JULES configuration based on a modification of the existing one.</span>\n<span class=\"paragraph\">Here we will use <code>tempfile</code> to write to a temporary directory that is automatically deleted upon exit from the context handler. In practice one would create a persistent directory.</span></span>"
+          }
+        }
+      ],
+      "console": []
+    },
+    {
+      "id": "wlCL",
+      "code_hash": "a37e267e26db3cfa16464ed15a03e321",
+      "outputs": [
+        {
+          "type": "error",
+          "ename": "exception",
+          "evalue": "found the following matches with the input file in xarray's IO backends: ['netcdf4', 'h5netcdf']. But their dependencies may not be installed, see:\nhttps://docs.xarray.dev/en/stable/user-guide/io.html \nhttps://docs.xarray.dev/en/stable/getting-started-guide/installing.html",
+          "traceback": null
+        }
+      ],
+      "console": [
+        {
+          "type": "stream",
+          "name": "stderr",
+          "text": "<span class=\"codehilite\"><div class=\"highlight\"><pre><span></span><span class=\"gt\">Traceback (most recent call last):</span>\n  File <span class=\"nb\">&quot;/tmp/marimo_49692/__marimo__cell_wlCL_.py&quot;</span>, line <span class=\"m\">4</span>, in <span class=\"n\">&lt;module&gt;</span>\n<span class=\"w\">    </span><span class=\"n\">config_2</span> <span class=\"o\">=</span> <span class=\"n\">handler_1</span><span class=\"o\">.</span><span class=\"n\">read</span><span class=\"p\">(</span><span class=\"s2\">&quot;./config&quot;</span><span class=\"p\">)</span>\n  File <span class=\"nb\">&quot;/home/joe/github.com/jmarshrossney/config-foundry/src/config_foundry/config.py&quot;</span>, line <span class=\"m\">59</span>, in <span class=\"n\">read</span>\n<span class=\"w\">    </span><span class=\"n\">data</span><span class=\"p\">[</span><span class=\"n\">field</span><span class=\"o\">.</span><span class=\"n\">name</span><span class=\"p\">]</span> <span class=\"o\">=</span> <span class=\"n\">handler</span><span class=\"o\">.</span><span class=\"n\">read</span><span class=\"p\">(</span><span class=\"n\">config</span><span class=\"o\">.</span><span class=\"n\">path</span><span class=\"p\">)</span>\n<span class=\"w\">                       </span><span class=\"pm\">~~~~~~~~~~~~^^^^^^^^^^^^^</span>\n  File <span class=\"nb\">&quot;/home/joe/github.com/jmarshrossney/config-foundry/src/config_foundry/config.py&quot;</span>, line <span class=\"m\">59</span>, in <span class=\"n\">read</span>\n<span class=\"w\">    </span><span class=\"n\">data</span><span class=\"p\">[</span><span class=\"n\">field</span><span class=\"o\">.</span><span class=\"n\">name</span><span class=\"p\">]</span> <span class=\"o\">=</span> <span class=\"n\">handler</span><span class=\"o\">.</span><span class=\"n\">read</span><span class=\"p\">(</span><span class=\"n\">config</span><span class=\"o\">.</span><span class=\"n\">path</span><span class=\"p\">)</span>\n<span class=\"w\">                       </span><span class=\"pm\">~~~~~~~~~~~~^^^^^^^^^^^^^</span>\n  File <span class=\"nb\">&quot;/home/joe/github.com/jmarshrossney/config-foundry/src/config_foundry/filter.py&quot;</span>, line <span class=\"m\">67</span>, in <span class=\"n\">wrapped_read</span>\n<span class=\"w\">    </span><span class=\"k\">return</span> <span class=\"n\">original_read</span><span class=\"p\">(</span><span class=\"bp\">self</span><span class=\"p\">,</span> <span class=\"n\">path</span><span class=\"p\">)</span>\n  File <span class=\"nb\">&quot;/home/joe/github.com/jmarshrossney/config-foundry/src/config_foundry/filter.py&quot;</span>, line <span class=\"m\">67</span>, in <span class=\"n\">wrapped_read</span>\n<span class=\"w\">    </span><span class=\"k\">return</span> <span class=\"n\">original_read</span><span class=\"p\">(</span><span class=\"bp\">self</span><span class=\"p\">,</span> <span class=\"n\">path</span><span class=\"p\">)</span>\n  File <span class=\"nb\">&quot;/tmp/marimo_49692/__marimo__cell_ulZA_.py&quot;</span>, line <span class=\"m\">10</span>, in <span class=\"n\">read</span>\n<span class=\"w\">    </span><span class=\"n\">dataset</span> <span class=\"o\">=</span> <span class=\"n\">xarray</span><span class=\"o\">.</span><span class=\"n\">load_dataset</span><span class=\"p\">(</span><span class=\"n\">path</span><span class=\"p\">)</span>\n  File <span class=\"nb\">&quot;/home/joe/.cache/uv/archive-v0/votsLcc4QQZPpmLX2G8Gl/lib/python3.13/site-packages/xarray/backends/api.py&quot;</span>, line <span class=\"m\">165</span>, in <span class=\"n\">load_dataset</span>\n<span class=\"w\">    </span><span class=\"k\">with</span> <span class=\"n\">open_dataset</span><span class=\"p\">(</span><span class=\"n\">filename_or_obj</span><span class=\"p\">,</span> <span class=\"o\">**</span><span class=\"n\">kwargs</span><span class=\"p\">)</span> <span class=\"k\">as</span> <span class=\"n\">ds</span><span class=\"p\">:</span>\n<span class=\"w\">         </span><span class=\"pm\">~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^</span>\n  File <span class=\"nb\">&quot;/home/joe/.cache/uv/archive-v0/votsLcc4QQZPpmLX2G8Gl/lib/python3.13/site-packages/xarray/backends/api.py&quot;</span>, line <span class=\"m\">588</span>, in <span class=\"n\">open_dataset</span>\n<span class=\"w\">    </span><span class=\"n\">engine</span> <span class=\"o\">=</span> <span class=\"n\">plugins</span><span class=\"o\">.</span><span class=\"n\">guess_engine</span><span class=\"p\">(</span><span class=\"n\">filename_or_obj</span><span class=\"p\">)</span>\n  File <span class=\"nb\">&quot;/home/joe/.cache/uv/archive-v0/votsLcc4QQZPpmLX2G8Gl/lib/python3.13/site-packages/xarray/backends/plugins.py&quot;</span>, line <span class=\"m\">217</span>, in <span class=\"n\">guess_engine</span>\n<span class=\"w\">    </span><span class=\"k\">raise</span> <span class=\"ne\">ValueError</span><span class=\"p\">(</span><span class=\"n\">error_msg</span><span class=\"p\">)</span>\n<span class=\"gr\">ValueError</span>: <span class=\"n\">found the following matches with the input file in xarray&#39;s IO backends: [&#39;netcdf4&#39;, &#39;h5netcdf&#39;]. But their dependencies may not be installed, see:</span>\n<span class=\"x\">https://docs.xarray.dev/en/stable/user-guide/io.html </span>\n<span class=\"x\">https://docs.xarray.dev/en/stable/getting-started-guide/installing.html</span>\n</pre></div>\n</span>",
+          "mimetype": "application/vnd.marimo+traceback"
+        }
+      ]
+    },
+    {
+      "id": "kqZH",
+      "code_hash": "e181efcf155eef21719f37511de1f32f",
+      "outputs": [
+        {
+          "type": "data",
+          "data": {
+            "text/markdown": "<span class=\"markdown prose dark:prose-invert contents\"></span>"
+          }
+        }
+      ],
+      "console": []
+    }
+  ]
+}

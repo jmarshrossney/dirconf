@@ -1,0 +1,1051 @@
+{
+  "version": "1",
+  "metadata": {
+    "marimo_version": "0.23.5",
+    "script_metadata_hash": "4ccd3f3c3b5d00c23fd9bb538f43b603"
+  },
+  "cells": [
+    {
+      "id": "Hbol",
+      "code_hash": "1d0db38904205bec4d6f6f6a1f6cec3e",
+      "outputs": [
+        {
+          "type": "data",
+          "data": {
+            "text/plain": ""
+          }
+        }
+      ],
+      "console": []
+    },
+    {
+      "id": "MJUe",
+      "code_hash": "973247254bbcef5f6b5868caf9e8ee66",
+      "outputs": [
+        {
+          "type": "data",
+          "data": {
+            "text/markdown": "<span class=\"markdown prose dark:prose-invert contents\"><h1 id=\"usage\">Usage</h1>\n<h2 id=\"basic-usage\">Basic Usage</h2>\n<h4 id=\"a-simple-configuration\">A simple configuration</h4>\n<span class=\"paragraph\">We will demonstrate basic usage of <code>config-foundry</code> using a simple configuration containing a <a href=\"https://en.wikipedia.org/wiki/YAML\" rel=\"noopener noreferrer\" target=\"_blank\">YAML</a> file called <code>config.yml</code> and a <a href=\"https://en.wikipedia.org/wiki/Comma-separated_values\" rel=\"noopener noreferrer\" target=\"_blank\">CSV</a> file called <code>data.csv</code>.</span>\n<span class=\"paragraph\">A concrete instance of this configuration already exists in the <code>./basic</code> directory.</span></span>"
+          }
+        }
+      ],
+      "console": []
+    },
+    {
+      "id": "vblA",
+      "code_hash": "2d3b139ec1a7af63a1499a3f9704ce39",
+      "outputs": [
+        {
+          "type": "data",
+          "data": {
+            "text/plain": ""
+          }
+        }
+      ],
+      "console": [
+        {
+          "type": "stream",
+          "name": "stdout",
+          "text": "./basic\n\u251c\u2500\u2500config.yml\n\u2514\u2500\u2500data.csv\n",
+          "mimetype": "text/plain"
+        }
+      ]
+    },
+    {
+      "id": "bkHC",
+      "code_hash": "f866678a5d669e32a6379b27807a8b78",
+      "outputs": [
+        {
+          "type": "data",
+          "data": {
+            "text/markdown": "<span class=\"markdown prose dark:prose-invert contents\"><h3 id=\"defining-handlers\">Defining handlers</h3>\n<span class=\"paragraph\">We first need to define two handlers that implement <code>read</code> and <code>write</code> for the two files that make up a configuration.</span></span>"
+          }
+        }
+      ],
+      "console": []
+    },
+    {
+      "id": "lEQa",
+      "code_hash": "236dd7102a7d6918fed870d518b9b28d",
+      "outputs": [
+        {
+          "type": "data",
+          "data": {
+            "text/markdown": "<span class=\"markdown prose dark:prose-invert contents\"><h4 id=\"yaml-handler\">YAML handler</h4></span>"
+          }
+        }
+      ],
+      "console": []
+    },
+    {
+      "id": "PKri",
+      "code_hash": "9732035447455f81789f1bc615e05bdd",
+      "outputs": [
+        {
+          "type": "data",
+          "data": {
+            "text/plain": ""
+          }
+        }
+      ],
+      "console": []
+    },
+    {
+      "id": "Xref",
+      "code_hash": "d34d88476c78490ffcbc41d8ccd9bccb",
+      "outputs": [
+        {
+          "type": "data",
+          "data": {
+            "text/markdown": "<span class=\"markdown prose dark:prose-invert contents\"><span class=\"paragraph\">Let's quickly test that <code>read</code> works:</span></span>"
+          }
+        }
+      ],
+      "console": []
+    },
+    {
+      "id": "SFPL",
+      "code_hash": "d26e5684c8b683cc221848dd0d274072",
+      "outputs": [
+        {
+          "type": "data",
+          "data": {
+            "application/json": "{\"id\": \"Basic config\", \"params\": {\"a\": \"text/plain+float:1.0\", \"b\": \"text/plain+float:2.0\", \"c\": \"text/plain+float:3.0\"}, \"init_state\": [\"text/plain+float:0.0\", \"text/plain+float:0.0\", \"text/plain+float:0.0\"], \"switch\": true}"
+          }
+        }
+      ],
+      "console": []
+    },
+    {
+      "id": "BYtC",
+      "code_hash": "9e3b5f0413d983aeb0360ac603ab32db",
+      "outputs": [
+        {
+          "type": "data",
+          "data": {
+            "text/markdown": "<span class=\"markdown prose dark:prose-invert contents\"><h4 id=\"csv-handler\">CSV handler</h4></span>"
+          }
+        }
+      ],
+      "console": []
+    },
+    {
+      "id": "RGSE",
+      "code_hash": "9669fc272b5292144f2a3ee890abaa7c",
+      "outputs": [
+        {
+          "type": "data",
+          "data": {
+            "text/plain": ""
+          }
+        }
+      ],
+      "console": []
+    },
+    {
+      "id": "Kclp",
+      "code_hash": "f2bff8a40a6544a5cb7f5b71df0ad47e",
+      "outputs": [
+        {
+          "type": "data",
+          "data": {
+            "application/json": "[[\"0.44436\", \"0.86243\"], [\"0.77458\", \"0.27978\"], [\"0.38164\", \"0.91161\"], [\"0.02331\", \"0.75244\"], [\"0.13891\", \"0.84464\"]]"
+          }
+        }
+      ],
+      "console": []
+    },
+    {
+      "id": "emfo",
+      "code_hash": "5c609015895deb23c151016ba29e9c70",
+      "outputs": [
+        {
+          "type": "data",
+          "data": {
+            "text/markdown": "<span class=\"markdown prose dark:prose-invert contents\"><h3 id=\"subclassing-metaconfig\">Subclassing <code>MetaConfig</code></h3>\n<span class=\"paragraph\">The next step is to specify a valid configuration in terms of its files and handlers.</span>\n<span class=\"paragraph\">To do this we will use the <code>make_metaconfig</code> function, which produces a subclass of <code>MetaConfig</code> whose fields correspond to the two required files.</span></span>"
+          }
+        }
+      ],
+      "console": []
+    },
+    {
+      "id": "Hstk",
+      "code_hash": "b077a3051b9971bbdb4bba2d650cbfb7",
+      "outputs": [
+        {
+          "type": "data",
+          "data": {
+            "text/plain": ""
+          }
+        }
+      ],
+      "console": []
+    },
+    {
+      "id": "nWHF",
+      "code_hash": "d55d5a6d13145c9b5dddfa6e22243635",
+      "outputs": [
+        {
+          "type": "data",
+          "data": {
+            "text/markdown": "<span class=\"markdown prose dark:prose-invert contents\"><h3 id=\"working-with-instances-of-metaconfig\">Working with instances of <code>MetaConfig</code></h3></span>"
+          }
+        }
+      ],
+      "console": []
+    },
+    {
+      "id": "iLit",
+      "code_hash": "87a8c55ea77fba2767f843fab5919d2a",
+      "outputs": [
+        {
+          "type": "data",
+          "data": {
+            "text/markdown": "<span class=\"markdown prose dark:prose-invert contents\"><h4 id=\"string-representation\">String representation</h4>\n<span class=\"paragraph\">Instances of <code>MetaConfig</code> have a convenient string representation derived from <code>MetaConfig.tree</code>.</span></span>"
+          }
+        }
+      ],
+      "console": []
+    },
+    {
+      "id": "ZHCJ",
+      "code_hash": "b079aadd34fa0b3ed1a3ffb5072a59b9",
+      "outputs": [
+        {
+          "type": "data",
+          "data": {
+            "text/plain": ""
+          }
+        }
+      ],
+      "console": [
+        {
+          "type": "stream",
+          "name": "stdout",
+          "text": "config_foundry.config.ConfigHandler\n\u251c\u2500\u2500config ---- (path='config.yml', handler=YamlFileHandler)\n\u2514\u2500\u2500data ------ (path='data.csv', handler=CsvFileHandler)\n",
+          "mimetype": "text/plain"
+        }
+      ]
+    },
+    {
+      "id": "ROlb",
+      "code_hash": "7772c6dfe3522e713d768835584076a1",
+      "outputs": [
+        {
+          "type": "data",
+          "data": {
+            "text/markdown": "<span class=\"markdown prose dark:prose-invert contents\"><h4 id=\"reading-configurations\">Reading configurations</h4>\n<span class=\"paragraph\">Once a <code>MetaConfig</code> is instantiated, configurations are read into a <code>dict</code> by passing a path to a configuration directory into the <code>read</code> method.</span></span>"
+          }
+        }
+      ],
+      "console": []
+    },
+    {
+      "id": "qnkX",
+      "code_hash": "541e6a7586f6f497da2702caf0861c6f",
+      "outputs": [
+        {
+          "type": "data",
+          "data": {
+            "application/json": "{\"config\": {\"id\": \"Basic config\", \"params\": {\"a\": \"text/plain+float:1.0\", \"b\": \"text/plain+float:2.0\", \"c\": \"text/plain+float:3.0\"}, \"init_state\": [\"text/plain+float:0.0\", \"text/plain+float:0.0\", \"text/plain+float:0.0\"], \"switch\": true}, \"data\": [[\"0.44436\", \"0.86243\"], [\"0.77458\", \"0.27978\"], [\"0.38164\", \"0.91161\"], [\"0.02331\", \"0.75244\"], [\"0.13891\", \"0.84464\"]]}"
+          }
+        }
+      ],
+      "console": [
+        {
+          "type": "stream",
+          "name": "stdout",
+          "text": "{'config': {'id': 'Basic config',\n            'init_state': [0.0, 0.0, 0.0],\n            'params': {'a': 1.0, 'b': 2.0, 'c': 3.0},\n            'switch': True},\n 'data': [['0.44436', '0.86243'],\n          ['0.77458', '0.27978'],\n          ['0.38164', '0.91161'],\n          ['0.02331', '0.75244'],\n          ['0.13891', '0.84464']]}\n",
+          "mimetype": "text/plain"
+        }
+      ]
+    },
+    {
+      "id": "TqIu",
+      "code_hash": "3148e8dbe9bdfc0880ad5442dfe1d88b",
+      "outputs": [
+        {
+          "type": "data",
+          "data": {
+            "text/markdown": "<span class=\"markdown prose dark:prose-invert contents\"><h4 id=\"writing-configurations\">Writing configurations</h4>\n<span class=\"paragraph\">In-memory configurations can be written to the filesystem using the <code>write</code> method.</span>\n<span class=\"paragraph\">For the purpose of illustration we will modify the configuration and then write it to a temporary directory.</span></span>"
+          }
+        }
+      ],
+      "console": []
+    },
+    {
+      "id": "Vxnm",
+      "code_hash": "7dd113c79c18e4f5207b7cf6faae8b05",
+      "outputs": [
+        {
+          "type": "data",
+          "data": {
+            "text/plain": ""
+          }
+        }
+      ],
+      "console": [
+        {
+          "type": "stream",
+          "name": "stdout",
+          "text": "/tmp/tmph3krg7ww\n\u251c\u2500\u2500config.yml\n\u2514\u2500\u2500data.csv\n",
+          "mimetype": "text/plain"
+        }
+      ]
+    },
+    {
+      "id": "DnEU",
+      "code_hash": "691f4bf030456ef6ec91d6e46a002f64",
+      "outputs": [
+        {
+          "type": "data",
+          "data": {
+            "text/markdown": "<span class=\"markdown prose dark:prose-invert contents\"><h4 id=\"accessing-the-nodes\">Accessing the nodes</h4>\n<span class=\"paragraph\">Keep in mind that classes derived from <code>MetaConfig</code> as essentially <a href=\"https://docs.python.org/3/library/dataclasses.html\" rel=\"noopener noreferrer\" target=\"_blank\">dataclasses</a> whose fields are instances of <code>Node</code> (itself a dataclass!).\nAs such, the usual way of accessing dataclass fields applies.</span></span>"
+          }
+        }
+      ],
+      "console": []
+    },
+    {
+      "id": "ulZA",
+      "code_hash": "da7d033e05d0de4aa75f99e233aa25c7",
+      "outputs": [
+        {
+          "type": "data",
+          "data": {
+            "text/plain": ""
+          }
+        }
+      ],
+      "console": [
+        {
+          "type": "stream",
+          "name": "stdout",
+          "text": "config:\n\t<class 'config_foundry.node.Node'>\n\tconfig.yml\n\t<class '__main__.YamlFileHandler'>\ndata:\n\t<class 'config_foundry.node.Node'>\n\tdata.csv\n\t<class '__main__.CsvFileHandler'>\n",
+          "mimetype": "text/plain"
+        }
+      ]
+    },
+    {
+      "id": "ecfG",
+      "code_hash": "b4f62afa65507ae8bef41beb5b6dff15",
+      "outputs": [
+        {
+          "type": "data",
+          "data": {
+            "text/markdown": "<span class=\"markdown prose dark:prose-invert contents\"><span class=\"paragraph\">!!! tip\nIn the vast majority of situations (that I an think of) directly manipulating the nodes, paths or handlers after instantiation would be unnecessary.</span></span>"
+          }
+        }
+      ],
+      "console": []
+    },
+    {
+      "id": "Pvdt",
+      "code_hash": "803937857f3f26825dc64deeaf3507de",
+      "outputs": [
+        {
+          "type": "data",
+          "data": {
+            "text/markdown": "<span class=\"markdown prose dark:prose-invert contents\"><h2 id=\"advanced-usage\">Advanced Usage</h2></span>"
+          }
+        }
+      ],
+      "console": []
+    },
+    {
+      "id": "ZBYS",
+      "code_hash": "9168f65dbfe8e4b71ca10abf02358ca4",
+      "outputs": [
+        {
+          "type": "data",
+          "data": {
+            "text/markdown": "<span class=\"markdown prose dark:prose-invert contents\"><h3 id=\"nesting-configurations-within-other-configurations\">Nesting configurations within other configurations</h3></span>"
+          }
+        }
+      ],
+      "console": []
+    },
+    {
+      "id": "aLJB",
+      "code_hash": "a79f7abd94dfc1ad24b50a5e24c8954e",
+      "outputs": [
+        {
+          "type": "data",
+          "data": {
+            "text/plain": ""
+          }
+        }
+      ],
+      "console": [
+        {
+          "type": "stream",
+          "name": "stdout",
+          "text": "./nested\n\u251c\u2500\u2500basic\n\u2502  \u251c\u2500\u2500config.yml\n\u2502  \u2514\u2500\u2500data.csv\n\u2514\u2500\u2500metadata.yml\n",
+          "mimetype": "text/plain"
+        }
+      ]
+    },
+    {
+      "id": "nHfw",
+      "code_hash": "57d211e116341def2be6487e755db8f8",
+      "outputs": [
+        {
+          "type": "data",
+          "data": {
+            "text/plain": ""
+          }
+        }
+      ],
+      "console": []
+    },
+    {
+      "id": "xXTn",
+      "code_hash": "88f2b6a5b64cc0ae192662fc53dee35e",
+      "outputs": [
+        {
+          "type": "data",
+          "data": {
+            "text/plain": ""
+          }
+        }
+      ],
+      "console": [
+        {
+          "type": "stream",
+          "name": "stdout",
+          "text": "config_foundry.config.NestedHandler\n\u251c\u2500\u2500metadata -------- (path='metadata.yml', handler=YamlFileHandler)\n\u2514\u2500\u2500inner_config ---- (path='basic', handler=ConfigHandler)\n   \u251c\u2500\u2500config ---- (path='config.yml', handler=YamlFileHandler)\n   \u2514\u2500\u2500data ------ (path='data.csv', handler=CsvFileHandler)\n",
+          "mimetype": "text/plain"
+        }
+      ]
+    },
+    {
+      "id": "AjVT",
+      "code_hash": "45de784cb4640072baaf95d307879e12",
+      "outputs": [
+        {
+          "type": "data",
+          "data": {
+            "text/plain": ""
+          }
+        }
+      ],
+      "console": [
+        {
+          "type": "stream",
+          "name": "stdout",
+          "text": "{'inner_config': {'config': {'id': 'Nested config',\n                             'init_state': [0.0, 0.0, 0.0],\n                             'params': {'a': 1.0, 'b': 2.0, 'c': 3.0},\n                             'switch': True},\n                  'data': [['0.44436', '0.86243'],\n                           ['0.77458', '0.27978'],\n                           ['0.38164', '0.91161'],\n                           ['0.02331', '0.75244'],\n                           ['0.13891', '0.84464']]},\n 'metadata': {'commit': '240dba665dad4335e391380879aa9602034e5c1c',\n              'timestamp': 20250811102359,\n              'user': 'joe'}}\n",
+          "mimetype": "text/plain"
+        }
+      ]
+    },
+    {
+      "id": "pHFh",
+      "code_hash": "905e71b27fed5019ab34ce227a6433f0",
+      "outputs": [
+        {
+          "type": "data",
+          "data": {
+            "text/markdown": "<span class=\"markdown prose dark:prose-invert contents\"><h3 id=\"variable-paths\">Variable paths</h3>\n<span class=\"paragraph\">Often configurations are flexible regarding paths and file names.</span>\n<span class=\"paragraph\">Here we do not fix the file name for <code>data</code> - perhaps it differs between configurations (e.g. based on a path set in <code>config.yml</code>).</span></span>"
+          }
+        }
+      ],
+      "console": []
+    },
+    {
+      "id": "NCOB",
+      "code_hash": "df588412447ab24ec303212d16d55d58",
+      "outputs": [
+        {
+          "type": "data",
+          "data": {
+            "text/plain": ""
+          }
+        }
+      ],
+      "console": []
+    },
+    {
+      "id": "aqbW",
+      "code_hash": "5dad470be36c36a4c51c05291e1e9fae",
+      "outputs": [
+        {
+          "type": "data",
+          "data": {
+            "text/markdown": "<span class=\"markdown prose dark:prose-invert contents\"><span class=\"paragraph\"><code>UnspecifiedPathHandler</code> now requires the <strong>relative</strong> path corresponding to <code>data</code> to be provided upon instantiation.</span>\n<span class=\"paragraph\">!!! note\n    Under the hood, the provided path is transformed into a <code>Node</code> in the <code>__post_init__</code> dataclass method.</span></span>"
+          }
+        }
+      ],
+      "console": []
+    },
+    {
+      "id": "TRpd",
+      "code_hash": "223ef307f0376075cb4acabddf53064f",
+      "outputs": [
+        {
+          "type": "data",
+          "data": {
+            "application/json": "{\"config\": {\"id\": \"Basic config\", \"params\": {\"a\": \"text/plain+float:1.0\", \"b\": \"text/plain+float:2.0\", \"c\": \"text/plain+float:3.0\"}, \"init_state\": [\"text/plain+float:0.0\", \"text/plain+float:0.0\", \"text/plain+float:0.0\"], \"switch\": true}, \"data\": [[\"0.44436\", \"0.86243\"], [\"0.77458\", \"0.27978\"], [\"0.38164\", \"0.91161\"], [\"0.02331\", \"0.75244\"], [\"0.13891\", \"0.84464\"]]}"
+          }
+        }
+      ],
+      "console": [
+        {
+          "type": "stream",
+          "name": "stdout",
+          "text": "config_foundry.config.UnspecifiedPathHandler\n\u251c\u2500\u2500config ---- (path='config.yml', handler=YamlFileHandler)\n\u2514\u2500\u2500data ------ (path='data.csv', handler=CsvFileHandler)\n",
+          "mimetype": "text/plain"
+        }
+      ]
+    },
+    {
+      "id": "TXez",
+      "code_hash": "9d3f26d3d4c8acf8cae50af7368b9994",
+      "outputs": [
+        {
+          "type": "data",
+          "data": {
+            "text/markdown": "<span class=\"markdown prose dark:prose-invert contents\"><h3 id=\"variable-paths-and-handlers\">Variable paths and handlers</h3>\n<span class=\"paragraph\">If we can delay specifying a path until instantiation, we may also want to delay the specification of the handler.</span>\n<span class=\"paragraph\">Let's say that the <code>config</code> node can be either a YAML or JSON file.</span>\n<span class=\"paragraph\">We first define a JSON handler.</span></span>"
+          }
+        }
+      ],
+      "console": []
+    },
+    {
+      "id": "dNNg",
+      "code_hash": "e989e44ec2704dd4f8670f837eb9fcbc",
+      "outputs": [
+        {
+          "type": "data",
+          "data": {
+            "text/plain": ""
+          }
+        }
+      ],
+      "console": []
+    },
+    {
+      "id": "yCnT",
+      "code_hash": "a5c211f1f7ee3d4df914fb4b46dfa068",
+      "outputs": [
+        {
+          "type": "data",
+          "data": {
+            "text/markdown": "<span class=\"markdown prose dark:prose-invert contents\"><span class=\"paragraph\">Now we construct a <code>MetaConfig</code> subclass that leaves <code>config</code> entirely unspecified.</span></span>"
+          }
+        }
+      ],
+      "console": []
+    },
+    {
+      "id": "wlCL",
+      "code_hash": "69f3e9420d2ceeab9c4ff852f138f0dd",
+      "outputs": [
+        {
+          "type": "data",
+          "data": {
+            "text/plain": ""
+          }
+        }
+      ],
+      "console": []
+    },
+    {
+      "id": "kqZH",
+      "code_hash": "2f3f41f7ff8f83992fc54004fb16ebcd",
+      "outputs": [
+        {
+          "type": "data",
+          "data": {
+            "text/markdown": "<span class=\"markdown prose dark:prose-invert contents\"><span class=\"paragraph\">We can now instantiate the class by passing a dict containing both the path and the handler.</span></span>"
+          }
+        }
+      ],
+      "console": []
+    },
+    {
+      "id": "wAgl",
+      "code_hash": "fcec72c3072d518afa8d9669620a29f4",
+      "outputs": [
+        {
+          "type": "data",
+          "data": {
+            "text/plain": ""
+          }
+        }
+      ],
+      "console": []
+    },
+    {
+      "id": "rEll",
+      "code_hash": "d66c0fa2f2a52eeb6c14da53eca36a0c",
+      "outputs": [
+        {
+          "type": "data",
+          "data": {
+            "text/markdown": "<span class=\"markdown prose dark:prose-invert contents\"><h4 id=\"registering-handlers\">Registering handlers</h4>\n<span class=\"paragraph\">To save some typing, we can register handlers to a handler registry.</span></span>"
+          }
+        }
+      ],
+      "console": []
+    },
+    {
+      "id": "dGlV",
+      "code_hash": "1e9cf06e6f08ebf12d5d21be8858e730",
+      "outputs": [
+        {
+          "type": "data",
+          "data": {
+            "text/plain": ""
+          }
+        }
+      ],
+      "console": []
+    },
+    {
+      "id": "SdmI",
+      "code_hash": "390082f25d7911e1d7a741b4d65117a4",
+      "outputs": [
+        {
+          "type": "data",
+          "data": {
+            "text/markdown": "<span class=\"markdown prose dark:prose-invert contents\"><span class=\"paragraph\">Now we can refer to handlers by their key in the registry.</span></span>"
+          }
+        }
+      ],
+      "console": []
+    },
+    {
+      "id": "lgWD",
+      "code_hash": "08c3d1a2c8c0f900fdd8af2215a8d21f",
+      "outputs": [
+        {
+          "type": "data",
+          "data": {
+            "text/plain": ""
+          }
+        }
+      ],
+      "console": [
+        {
+          "type": "stream",
+          "name": "stdout",
+          "text": "config_foundry.config.VariableHandler\n\u251c\u2500\u2500config ---- (path='config.json', handler=JsonFileHandler)\n\u2514\u2500\u2500data ------ (path='data.csv', handler=CsvFileHandler)\n",
+          "mimetype": "text/plain"
+        }
+      ]
+    },
+    {
+      "id": "yOPj",
+      "code_hash": "d8ce8241cda235b0c5d0eb2e6820656f",
+      "outputs": [
+        {
+          "type": "data",
+          "data": {
+            "text/markdown": "<span class=\"markdown prose dark:prose-invert contents\"><h4 id=\"handler-inference\">Handler inference</h4>\n<span class=\"paragraph\">More usefully, we leave the handler to be inferred by the file extension.</span>\n<span class=\"paragraph\">We first load the original 'basic' configuration.</span></span>"
+          }
+        }
+      ],
+      "console": []
+    },
+    {
+      "id": "fwwy",
+      "code_hash": "9bf690881c284f8cb0e666bb5a125a9d",
+      "outputs": [
+        {
+          "type": "data",
+          "data": {
+            "application/json": "{\"config\": {\"id\": \"Basic config\", \"params\": {\"a\": \"text/plain+float:1.0\", \"b\": \"text/plain+float:2.0\", \"c\": \"text/plain+float:3.0\"}, \"init_state\": [\"text/plain+float:0.0\", \"text/plain+float:0.0\", \"text/plain+float:0.0\"], \"switch\": true}, \"data\": [[\"0.44436\", \"0.86243\"], [\"0.77458\", \"0.27978\"], [\"0.38164\", \"0.91161\"], [\"0.02331\", \"0.75244\"], [\"0.13891\", \"0.84464\"]]}"
+          }
+        }
+      ],
+      "console": [
+        {
+          "type": "stream",
+          "name": "stdout",
+          "text": "config_foundry.config.VariableHandler\n\u251c\u2500\u2500config ---- (path='config.yml', handler=YamlFileHandler)\n\u2514\u2500\u2500data ------ (path='data.csv', handler=CsvFileHandler)\n",
+          "mimetype": "text/plain"
+        }
+      ]
+    },
+    {
+      "id": "LJZf",
+      "code_hash": "785887eb576516a9741680b1b964b8db",
+      "outputs": [
+        {
+          "type": "data",
+          "data": {
+            "text/markdown": "<span class=\"markdown prose dark:prose-invert contents\"><span class=\"paragraph\">Now we load the same configuration with a <code>.json</code> config file.</span></span>"
+          }
+        }
+      ],
+      "console": []
+    },
+    {
+      "id": "urSm",
+      "code_hash": "9fdb9198bac94c8b6158a732ee95355c",
+      "outputs": [
+        {
+          "type": "data",
+          "data": {
+            "application/json": "{\"config\": {\"id\": \"Basic config JSON\", \"params\": {\"a\": \"text/plain+float:1.0\", \"b\": \"text/plain+float:2.0\", \"c\": \"text/plain+float:3.0\"}, \"init_state\": [\"text/plain+float:0.0\", \"text/plain+float:0.0\", \"text/plain+float:0.0\"], \"switch\": true}, \"data\": [[\"0.44436\", \"0.86243\"], [\"0.77458\", \"0.27978\"], [\"0.38164\", \"0.91161\"], [\"0.02331\", \"0.75244\"], [\"0.13891\", \"0.84464\"]]}"
+          }
+        }
+      ],
+      "console": [
+        {
+          "type": "stream",
+          "name": "stdout",
+          "text": "config_foundry.config.VariableHandler\n\u251c\u2500\u2500config ---- (path='config.json', handler=JsonFileHandler)\n\u2514\u2500\u2500data ------ (path='data.csv', handler=CsvFileHandler)\n",
+          "mimetype": "text/plain"
+        }
+      ]
+    },
+    {
+      "id": "jxvo",
+      "code_hash": "2514f3e4f0df3c03233a623e479004dd",
+      "outputs": [
+        {
+          "type": "data",
+          "data": {
+            "text/markdown": "<span class=\"markdown prose dark:prose-invert contents\"><h3 id=\"handling-missing-files\">Handling missing files</h3>\n<span class=\"paragraph\">Up to this point, attempting to call <code>read</code> on a missing file or directory will result in an error being thrown.</span>\n<span class=\"paragraph\">In some situations we might want to handle missing data differently. Sometimes certain files are optional, and one is simply happy to skip over them if they do not exist.</span>\n<span class=\"paragraph\">Another use-case would be reading from a 'template' configuration that is incomplete, requiring additional data which we will merge into the Python <code>dict</code> before writing the complete configuration to a new location.</span></span>"
+          }
+        }
+      ],
+      "console": []
+    },
+    {
+      "id": "mWxS",
+      "code_hash": "b2844ca8bc2338d516b77b880ce9252a",
+      "outputs": [
+        {
+          "type": "data",
+          "data": {
+            "text/plain": ""
+          }
+        }
+      ],
+      "console": []
+    },
+    {
+      "id": "CcZR",
+      "code_hash": "b18320ac5b664523f8e9574368675f6a",
+      "outputs": [
+        {
+          "type": "data",
+          "data": {
+            "text/plain": ""
+          }
+        }
+      ],
+      "console": []
+    },
+    {
+      "id": "YWSi",
+      "code_hash": "c3104ae03c903d824768b56e5bc08be1",
+      "outputs": [
+        {
+          "type": "data",
+          "data": {
+            "text/markdown": "<span class=\"markdown prose dark:prose-invert contents\"><span class=\"paragraph\">Let's try to read the usual configuration</span></span>"
+          }
+        }
+      ],
+      "console": []
+    },
+    {
+      "id": "zlud",
+      "code_hash": "94e876e21e3cb244238bb1a2536adf0a",
+      "outputs": [
+        {
+          "type": "data",
+          "data": {
+            "text/plain": ""
+          }
+        }
+      ],
+      "console": [
+        {
+          "type": "stream",
+          "name": "stderr",
+          "text": "/home/joe/github.com/jmarshrossney/config-foundry/src/config_foundry/config.py:59: MissingWarning: read('optional.file') filtered out by test 'read=lambda path: path.exists(),'; returning `MISSING`.\n  data[field.name] = handler.read(config.path)\n",
+          "mimetype": "text/plain"
+        }
+      ]
+    },
+    {
+      "id": "tZnO",
+      "code_hash": "b88b6e99c4a7ef00e1b98726c2b36179",
+      "outputs": [
+        {
+          "type": "data",
+          "data": {
+            "text/markdown": "<span class=\"markdown prose dark:prose-invert contents\"><span class=\"paragraph\">We see that <code>DummyHandler.read</code> was never called, and instead we are shown a warning that <code>read('optional.file')</code> was filtered out by a test (which we are shown the code for). Note that this warning can be disabled by setting <code>warn=False</code> (the default) in <code>filter_missing</code>.</span>\n<span class=\"paragraph\">The configuration <code>dict</code> contains an entry corresponding to the <code>optional</code> node, but it has a special <em>sentinel</em> value, <code>MISSING</code>.</span></span>"
+          }
+        }
+      ],
+      "console": []
+    },
+    {
+      "id": "xvXZ",
+      "code_hash": "2eb0e2f1e19cfb20eaee1c0fa75d17ed",
+      "outputs": [
+        {
+          "type": "data",
+          "data": {
+            "text/plain": ""
+          }
+        }
+      ],
+      "console": [
+        {
+          "type": "stream",
+          "name": "stdout",
+          "text": "{'config': {'id': 'Basic config',\n            'init_state': [0.0, 0.0, 0.0],\n            'params': {'a': 1.0, 'b': 2.0, 'c': 3.0},\n            'switch': True},\n 'data': [['0.44436', '0.86243'],\n          ['0.77458', '0.27978'],\n          ['0.38164', '0.91161'],\n          ['0.02331', '0.75244'],\n          ['0.13891', '0.84464']],\n 'optional': <object object at 0x7834e04ceea0>}\n",
+          "mimetype": "text/plain"
+        }
+      ]
+    },
+    {
+      "id": "CLip",
+      "code_hash": "2c67b3d3f55af602cc0fdbca30589c46",
+      "outputs": [
+        {
+          "type": "data",
+          "data": {
+            "text/markdown": "<span class=\"markdown prose dark:prose-invert contents\"><span class=\"paragraph\">Now let's see what happens when we try to write the incomplete configuration.</span></span>"
+          }
+        }
+      ],
+      "console": []
+    },
+    {
+      "id": "YECM",
+      "code_hash": "439a090582a68dd6bf960a7c10a27f92",
+      "outputs": [
+        {
+          "type": "data",
+          "data": {
+            "text/plain": ""
+          }
+        }
+      ],
+      "console": [
+        {
+          "type": "stream",
+          "name": "stderr",
+          "text": "/home/joe/github.com/jmarshrossney/config-foundry/src/config_foundry/config.py:89: MissingWarning: write('optional.file') filtered out by test: 'write=lambda path, data, **_: data is not MISSING,'; Skipping...\n  handler.write(config.path, data[field.name], overwrite_ok=overwrite_ok)\n",
+          "mimetype": "text/plain"
+        },
+        {
+          "type": "stream",
+          "name": "stdout",
+          "text": "/tmp/tmp7dg48_wr\n\u251c\u2500\u2500config.yml\n\u2514\u2500\u2500data.csv\n",
+          "mimetype": "text/plain"
+        }
+      ]
+    },
+    {
+      "id": "cEAS",
+      "code_hash": "6e0f98b5ad981d5d001a0c6b1353c854",
+      "outputs": [
+        {
+          "type": "data",
+          "data": {
+            "text/markdown": "<span class=\"markdown prose dark:prose-invert contents\"><span class=\"paragraph\">Once again we are shown a warning, which explains both what was filtered out and why, and <code>DummyHandler.write</code> was never called.</span></span>"
+          }
+        }
+      ],
+      "console": []
+    },
+    {
+      "id": "iXej",
+      "code_hash": "cdb57b992a0cebbb5af42d56ae62b685",
+      "outputs": [
+        {
+          "type": "data",
+          "data": {
+            "text/markdown": "<span class=\"markdown prose dark:prose-invert contents\"><h3 id=\"filtering\">Filtering</h3>\n<span class=\"paragraph\">The <code>filter_missing</code> decorator is a special case of a more general <code>filter</code> class decorator, which allows the user to specify tests which trigger the 'missingness' behaviour if they fail.</span>\n<span class=\"paragraph\">We will now briefly run through some illustrative examples where filtering comes in useful.</span>\n<h4 id=\"skipping-large-files\">Skipping large files</h4>\n<span class=\"paragraph\">As an example, we will consider a situation where one of the files in a configuration is very large, and we want to avoid loading it into memory.</span>\n<span class=\"paragraph\">This is easy to achieve by combining the already-familiar <code>filter_missing</code> with a custom filter applied to the <code>read</code> method, using <code>filter_read</code>.</span>\n<span class=\"paragraph\">We will demonstrate this by creating a subclass of <code>CsvFileHandler</code> from earlier.</span></span>"
+          }
+        }
+      ],
+      "console": []
+    },
+    {
+      "id": "EJmg",
+      "code_hash": "8651509628f18ba020642acfc671e9bd",
+      "outputs": [
+        {
+          "type": "data",
+          "data": {
+            "text/plain": ""
+          }
+        }
+      ],
+      "console": []
+    },
+    {
+      "id": "UmEG",
+      "code_hash": "b1c155a0be161e33d6817aab3d3cdad8",
+      "outputs": [
+        {
+          "type": "data",
+          "data": {
+            "text/markdown": "<span class=\"markdown prose dark:prose-invert contents\"><span class=\"paragraph\">It should not be difficult to see why this works, but the following demonstrates it explicitly.</span></span>"
+          }
+        }
+      ],
+      "console": []
+    },
+    {
+      "id": "vEBW",
+      "code_hash": "4fa9b17085bc595d3821b6d939462ae4",
+      "outputs": [
+        {
+          "type": "data",
+          "data": {
+            "application/json": "{\"a\": [[\"0.44436\", \"0.86243\"], [\"0.77458\", \"0.27978\"], [\"0.38164\", \"0.91161\"], [\"0.02331\", \"0.75244\"], [\"0.13891\", \"0.84464\"]], \"b\": \"text/plain:<object object at 0x7834e04ceea0>\", \"c\": \"text/plain:<object object at 0x7834e04ceea0>\"}"
+          }
+        }
+      ],
+      "console": [
+        {
+          "type": "stream",
+          "name": "stdout",
+          "text": "./sizes\n\u251c\u2500\u2500big.csv\n\u251c\u2500\u2500huge.csv\n\u2514\u2500\u2500small.csv\n",
+          "mimetype": "text/plain"
+        }
+      ]
+    },
+    {
+      "id": "kLmu",
+      "code_hash": "39c7840444dde2dcf012169a867154cf",
+      "outputs": [
+        {
+          "type": "data",
+          "data": {
+            "text/markdown": "<span class=\"markdown prose dark:prose-invert contents\"><h4 id=\"skipping-absolute-paths\">Skipping absolute paths</h4></span>"
+          }
+        }
+      ],
+      "console": []
+    },
+    {
+      "id": "IpqN",
+      "code_hash": "17d1ff16af75d6adb5841c4a8522962e",
+      "outputs": [
+        {
+          "type": "data",
+          "data": {
+            "text/plain": ""
+          }
+        }
+      ],
+      "console": [
+        {
+          "type": "stream",
+          "name": "stderr",
+          "text": "<string>:5: UserWarning: Absolute paths are not recommended and may not be supported in future (https://github.com/jmarshrossney/config_foundry/issues/13). Did you mean to do this?\n",
+          "mimetype": "text/plain"
+        },
+        {
+          "type": "stream",
+          "name": "stdout",
+          "text": "config_foundry.config.ConfigHandler\n\u251c\u2500\u2500config ------ (path='config.yml', handler=YamlFileHandler)\n\u251c\u2500\u2500data -------- (path='data.csv', handler=SaferCsvFileHandler)\n\u2514\u2500\u2500big_data ---- (path='/path/to/shared/data.csv', handler=SaferCsvFileHandler)\n",
+          "mimetype": "text/plain"
+        }
+      ]
+    },
+    {
+      "id": "dxZZ",
+      "code_hash": "a6bab4b2a033d6d9b86fd02d3ea9f6b3",
+      "outputs": [
+        {
+          "type": "data",
+          "data": {
+            "application/json": "{\"config\": {\"id\": \"Basic config\", \"params\": {\"a\": \"text/plain+float:1.0\", \"b\": \"text/plain+float:2.0\", \"c\": \"text/plain+float:3.0\"}, \"init_state\": [\"text/plain+float:0.0\", \"text/plain+float:0.0\", \"text/plain+float:0.0\"], \"switch\": true}, \"data\": [[\"0.44436\", \"0.86243\"], [\"0.77458\", \"0.27978\"], [\"0.38164\", \"0.91161\"], [\"0.02331\", \"0.75244\"], [\"0.13891\", \"0.84464\"]], \"big_data\": \"text/plain:<object object at 0x7834e04ceea0>\"}"
+          }
+        }
+      ],
+      "console": []
+    },
+    {
+      "id": "dlnW",
+      "code_hash": "0808d226c2454b0c369e10276d463f1c",
+      "outputs": [
+        {
+          "type": "data",
+          "data": {
+            "text/plain": ""
+          }
+        }
+      ],
+      "console": [
+        {
+          "type": "stream",
+          "name": "stdout",
+          "text": "/tmp/tmpkjw5tp3d\n\u251c\u2500\u2500config.yml\n\u2514\u2500\u2500data.csv\n",
+          "mimetype": "text/plain"
+        }
+      ]
+    },
+    {
+      "id": "TTti",
+      "code_hash": "ab5104ed874978b52f75bbb4be95a95e",
+      "outputs": [
+        {
+          "type": "data",
+          "data": {
+            "text/markdown": "<span class=\"markdown prose dark:prose-invert contents\"><h4 id=\"generating-metadata\">Generating metadata</h4>\n<span class=\"paragraph\">In this example, we will read an incomplete configuration from <code>./basic</code>, and only upon <code>write</code> will we inject metadata into the configuration.</span></span>"
+          }
+        }
+      ],
+      "console": []
+    },
+    {
+      "id": "RKFZ",
+      "code_hash": "d76569f3848c31b45e32c091117bce9e",
+      "outputs": [
+        {
+          "type": "data",
+          "data": {
+            "text/plain": ""
+          }
+        }
+      ],
+      "console": [
+        {
+          "type": "stream",
+          "name": "stdout",
+          "text": "<object object at 0x7834e04ceea0>\n",
+          "mimetype": "text/plain"
+        }
+      ]
+    },
+    {
+      "id": "IaQp",
+      "code_hash": "ba4cdb7e07bf241b66ff35dc4dc54d54",
+      "outputs": [
+        {
+          "type": "data",
+          "data": {
+            "text/markdown": "<span class=\"markdown prose dark:prose-invert contents\"><span class=\"paragraph\"><em>Not yet finished.</em></span></span>"
+          }
+        }
+      ],
+      "console": []
+    },
+    {
+      "id": "IWgg",
+      "code_hash": "f0323f9ddb9da47eec1caf086391d84f",
+      "outputs": [
+        {
+          "type": "data",
+          "data": {
+            "text/markdown": "<span class=\"markdown prose dark:prose-invert contents\"><h3 id=\"strategies-for-validation\">Strategies for validation</h3>\n<span class=\"paragraph\"><em>To do.</em></span></span>"
+          }
+        }
+      ],
+      "console": []
+    }
+  ]
+}

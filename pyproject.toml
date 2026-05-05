@@ -30,19 +30,12 @@ dev = [
 ]
 docs = [
     "marimo-md-export>=0.1.1",
-    "markdown-exec[ansi]>=1.11.0",
-    "mkdocs>=1.6.1",
-    "mkdocs-include-exclude-files>=0.1.0",
-    "mkdocs-include-markdown-plugin>=7.1.6",
-    "mkdocs-ipynb>=0.1.1",
-    "mkdocs-material>=9.6.16",
     "mkdocstrings[python]>=0.30.0",
     "zensical>=0.0.39",
 ]
 examples = [
-    "jupyter>=1.1.1",
-    "jupytext>=1.17.2",
     "f90nml>=1.4.5",
+    "marimo>=0.23.3",
     "numpy>=2.3.2",
     "xarray>=2025.7.1",
     "pyyaml>=6.0.2",
@@ -57,8 +50,16 @@ test = [
 [tool.pyright]
 venvPath = "."
 venv = ".venv"
+exclude = [
+    "examples/",
+    "marimo-md-export/",
+]
 
 [tool.ruff]
+exclude = [
+    "examples/",
+    "marimo-md-export/",
+]
 line-length = 88
 indent-width = 4
 target-version = "py312"
@@ -80,5 +81,7 @@ select = [
 [tool.ruff.lint.pydocstyle]
 convention = "google"
 
-[tool.jupytext]
-formats = "ipynb,md"
+[tool.pytest.ini_options]
+norecursedirs = ["marimo-md-export"]
+
+
