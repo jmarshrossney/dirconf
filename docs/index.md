@@ -1,17 +1,21 @@
 # Home
 
-`dirconf` is a simple tool for the meta-configuration of collections of configuration files, leaning heavily on Python [dataclasses](https://docs.python.org/3/library/dataclasses.html).
+`dirconf` is a Python tool for declaratively specifying configuration directory structures, and constructing Python `dict` representations of their contents.
 
-I wrote this because I sometimes work with quite old scientific models requiring various configuration files and data inputs in various formats to be present in various locations. I was (and remain) concerned about how easy it can be to misconfigure certain models without realising, and how common workflows compromise reproducibility.
+I wrote this because I sometimes have to work with quite old scientific models that require various configuration files and data inputs in various formats to be present in various locations.
+I was (and remain) concerned about how easy it can be to misconfigure certain models without realising, and how common workflows compromise reproducibility.
 
 `dirconf` helps by
 
-1. Allowing the user to describe the structure of a directory representing a valid configuration, and validate real directories against this description.
+1. Allowing the user to describe the structure of a directory representing a valid configuration using Python [dataclasses](https://docs.python.org/3/library/dataclasses.html), and validate real directories against this description.
 
-2. Facilitating the generation of new configurations and metadata programmatically, in Python, as opposed to copying and editing files by hand or writing shell scripts.
+2. Providing a scaffold for defining consistent read/write mechanisms through which complex, distributed configurations in legacy formats can be mapped to Python `dict`s.
 
-3. Providing a consistent mechanism through which complex, distributed configurations in legacy formats can be validated using excellent tools such as [JSON Schema](https://json-schema.org/) and [Pydantic](https://docs.pydantic.dev/).
+The ability to represent configurations as `dict`s is very useful indeed.
+With no extra effort, we can:
 
+- Validate configurations using excellent tools such as [JSON Schema](https://json-schema.org/) and [Pydantic](https://docs.pydantic.dev/).
+- Generate new configurations and metadata programmatically, as opposed to copying and editing files by hand or writing shell scripts.
 
 ## Installation
 
@@ -31,7 +35,6 @@ I wrote this because I sometimes work with quite old scientific models requiring
     ```
 
 Currently Python versions equal to or above 3.12 are supported.
-It has no dependencies other than the Standard Library.
 
 
 ## Overview of usage
@@ -50,7 +53,7 @@ These steps are most easily understood through examples.
 To start with, take a look at the [Usage](101.md) section. 
 More realistic examples can be found under the 'examples' heading.
 
-All of the examples (including 'Usage') are based on self-contained [marimo](https://marimo.io/) notebooks, which can be browsed and downloaded [here](https://github.com/jmarshrossney/dirconf/tree/main/examples/)
+All examples are based on self-contained [marimo](https://marimo.io/) notebooks, which can be found [here](https://github.com/jmarshrossney/dirconf/tree/main/examples/).
 
 
 ## Philosophy
