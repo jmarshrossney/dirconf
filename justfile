@@ -1,5 +1,5 @@
 _:
-  @just --list
+  @just lint typecheck test docs
 
 # Format and lint the package using ruff, and lint the examples using marimo.
 lint:

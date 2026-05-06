@@ -32,8 +32,6 @@ def _(mo):
     mo.md(r"""
     ## Basic Usage
 
-    #### A simple configuration
-
     We will demonstrate basic usage of `dirconf` using a simple configuration containing a [YAML](https://en.wikipedia.org/wiki/YAML) file called `config.yml` and a [CSV](https://en.wikipedia.org/wiki/Comma-separated_values) file called `data.csv`.
 
     A concrete instance of this configuration already exists in the `./basic` directory.
@@ -160,14 +158,14 @@ def _(mo):
 def _(CsvFileHandler, YamlFileHandler):
     from dirconf import make_dirconfig
 
-    ConfigHandler = make_dirconfig(
-        cls_name="ConfigHandler",
+    BasicConfig = make_dirconfig(
+        cls_name="BasicConfig",
         spec={
             "config": {"path": "config.yml", "handler": YamlFileHandler},
             "data": {"path": "data.csv", "handler": CsvFileHandler},
         },
     )
-    return ConfigHandler, make_dirconfig
+    return BasicConfig, make_dirconfig
 
 
 @app.cell(hide_code=True)
@@ -189,10 +187,10 @@ def _(mo):
 
 
 @app.cell
-def _(ConfigHandler):
-    handler = ConfigHandler()
-    print(handler)
-    return (handler,)
+def _(BasicConfig):
+    config = BasicConfig()
+    print(config)
+    return (config,)
 
 
 @app.cell(hide_code=True)
@@ -206,8 +204,8 @@ def _(mo):
 
 
 @app.cell
-def _(handler):
-    config_dict = handler.read("./basic")
+def _(config):
+    config_dict = config.read("./basic")
     config_dict
     return (config_dict,)
 
@@ -225,7 +223,7 @@ def _(mo):
 
 
 @app.cell
-def _(config_dict, handler, tree):
+def _(config, config_dict, tree):
     import tempfile
 
     # Modify the 'a' parameter
@@ -233,10 +231,10 @@ def _(config_dict, handler, tree):
 
     # Write to a temporary directory, and check it's worked
     with tempfile.TemporaryDirectory() as _temp_dir:
-        handler.write(_temp_dir, config_dict)
+        config.write(_temp_dir, config_dict)
         print(tree(_temp_dir))
 
-        reread_config_dict = handler.read(_temp_dir)
+        reread_config_dict = config.read(_temp_dir)
 
     reread_config_dict
     return (tempfile,)
@@ -247,19 +245,25 @@ def _(mo):
     mo.md(r"""
     #### Accessing the nodes
 
-    Keep in mind that classes derived from `DirConfig` as essentially [dataclasses](https://docs.python.org/3/library/dataclasses.html) whose fields are instances of `Node` (itself a dataclass!).
+    Keep in mind that classes derived from `DirConfig` are essentially [dataclasses](https://docs.python.org/3/library/dataclasses.html) whose fields are instances of `Node` (itself a dataclass!).
     As such, the usual way of accessing dataclass fields applies.
     """)
     return
 
 
 @app.cell
-def _(handler):
+def _(config):
     import dataclasses
 
-    for field in dataclasses.fields(handler):
-        node = getattr(handler, field.name)
+    for field in dataclasses.fields(config):
+        node = getattr(config, field.name)
         print(f"{field.name}:\n\t{type(node)}\n\t{node.path}\n\t{node.handler}")
+    return (dataclasses,)
+
+
+@app.cell
+def _(config, dataclasses):
+    dataclasses.asdict(config)
     return
 
 
@@ -283,7 +287,7 @@ def _(mo):
 @app.cell(hide_code=True)
 def _(mo):
     mo.md(r"""
-    ### Nesting configurations within other configurations
+    ### Nested configs
     """)
     return
 
@@ -295,23 +299,23 @@ def _(tree):
 
 
 @app.cell
-def _(ConfigHandler, YamlFileHandler, make_dirconfig):
-    NestedHandler = make_dirconfig(
-        cls_name="NestedHandler",
+def _(BasicConfig, YamlFileHandler, make_dirconfig):
+    NestedConfig = make_dirconfig(
+        cls_name="NestedConfig",
         spec={
             "metadata": {"path": "metadata.yml", "handler": YamlFileHandler},
-            "inner_config": {"path": "basic", "handler": ConfigHandler},
+            "inner_config": {"path": "basic", "handler": BasicConfig},
         },
     )
 
-    nested_handler = NestedHandler()
-    print(nested_handler)
-    return (nested_handler,)
+    nested_config = NestedConfig()
+    print(nested_config)
+    return (nested_config,)
 
 
 @app.cell
-def _(nested_handler):
-    nested_handler.read("./nested")
+def _(nested_config):
+    nested_config.read("./nested")
     return
 
 
@@ -329,20 +333,20 @@ def _(mo):
 
 @app.cell
 def _(CsvFileHandler, YamlFileHandler, make_dirconfig):
-    UnspecifiedPathHandler = make_dirconfig(
-        cls_name="UnspecifiedPathHandler",
+    FlexiblePathConfig = make_dirconfig(
+        cls_name="FlexiblePathConfig",
         spec={
             "config": {"path": "config.yml", "handler": YamlFileHandler},
             "data": {"handler": CsvFileHandler},
         },
     )
-    return (UnspecifiedPathHandler,)
+    return (FlexiblePathConfig,)
 
 
 @app.cell(hide_code=True)
 def _(mo):
     mo.md(r"""
-    `UnspecifiedPathHandler` now requires the **relative** path corresponding to `data` to be provided upon instantiation.
+    `FlexiblePathConfig` now requires the **relative** path corresponding to `data` to be provided upon instantiation.
 
     !!! note
         Under the hood, the provided path is transformed into a `Node` in the `__post_init__` dataclass method.
@@ -351,12 +355,12 @@ def _(mo):
 
 
 @app.cell
-def _(UnspecifiedPathHandler):
-    handler_a = UnspecifiedPathHandler(data="data.csv")
-    handler_b = UnspecifiedPathHandler(data="observations.csv")
+def _(FlexiblePathConfig):
+    config_a = FlexiblePathConfig(data="data.csv")
+    config_b = FlexiblePathConfig(data="observations.csv")
 
-    print(handler_a)
-    print(handler_b)
+    print(config_a)
+    print(config_b)
     return
 
 
@@ -403,14 +407,14 @@ def _(mo):
 
 @app.cell
 def _(CsvFileHandler, make_dirconfig):
-    VariableHandler = make_dirconfig(
-        cls_name="VariableHandler",
+    VariableConfig = make_dirconfig(
+        cls_name="VariableConfig",
         spec={
             "config": {},
             "data": {"path": "data.csv", "handler": CsvFileHandler},
         },
     )
-    return (VariableHandler,)
+    return (VariableConfig,)
 
 
 @app.cell(hide_code=True)
@@ -422,11 +426,11 @@ def _(mo):
 
 
 @app.cell
-def _(JsonFileHandler, VariableHandler):
-    variable_handler = VariableHandler(
+def _(JsonFileHandler, VariableConfig):
+    variable_config = VariableConfig(
         config={"path": "config.json", "handler": JsonFileHandler}
     )
-    print(variable_handler)
+    print(variable_config)
     return
 
 
@@ -458,11 +462,11 @@ def _(mo):
 
 
 @app.cell
-def _(VariableHandler):
-    lazy_variable_handler = VariableHandler(
+def _(VariableConfig):
+    lazy_variable_config = VariableConfig(
         config={"path": "config.json", "Handler": "json"}
     )
-    print(lazy_variable_handler)
+    print(lazy_variable_config)
     return
 
 
@@ -479,10 +483,10 @@ def _(mo):
 
 
 @app.cell
-def _(VariableHandler):
-    yaml_handler = VariableHandler(config="config.yml")
-    print(yaml_handler)
-    yaml_handler.read("./basic")
+def _(VariableConfig):
+    yaml_config = VariableConfig(config="config.yml")
+    print(yaml_config)
+    yaml_config.read("./basic")
     return
 
 
@@ -495,10 +499,10 @@ def _(mo):
 
 
 @app.cell
-def _(VariableHandler):
-    json_handler = VariableHandler(config="config.json")
-    print(json_handler)
-    json_handler.read("./basic_json")
+def _(VariableConfig):
+    json_config = VariableConfig(config="config.json")
+    print(json_config)
+    json_config.read("./basic_json")
     return
 
 
@@ -535,15 +539,15 @@ def _(PathLike):
 
 @app.cell
 def _(CsvFileHandler, DummyHandler, YamlFileHandler, make_dirconfig):
-    ConfigHandlerWithOptional = make_dirconfig(
-        cls_name="ConfigHandlerWithOptional",
+    ConfigWithOptional = make_dirconfig(
+        cls_name="ConfigWithOptional",
         spec={
             "config": {"path": "config.yml", "handler": YamlFileHandler},
             "data": {"path": "data.csv", "handler": CsvFileHandler},
             "optional": {"path": "optional.file", "handler": DummyHandler},
         },
     )
-    return (ConfigHandlerWithOptional,)
+    return (ConfigWithOptional,)
 
 
 @app.cell(hide_code=True)
@@ -555,10 +559,10 @@ def _(mo):
 
 
 @app.cell
-def _(ConfigHandlerWithOptional):
-    handler_with_optional = ConfigHandlerWithOptional()
-    config_with_optional = handler_with_optional.read("./basic")
-    return config_with_optional, handler_with_optional
+def _(ConfigWithOptional):
+    config_with_optional = ConfigWithOptional()
+    config_dict_with_optional = config_with_optional.read("./basic")
+    return config_dict_with_optional, config_with_optional
 
 
 @app.cell(hide_code=True)
@@ -572,9 +576,8 @@ def _(mo):
 
 
 @app.cell
-def _(config_with_optional):
-
-    config_with_optional
+def _(config_dict_with_optional):
+    config_dict_with_optional
     return
 
 
@@ -587,9 +590,9 @@ def _(mo):
 
 
 @app.cell
-def _(config_with_optional, handler_with_optional, tempfile, tree):
+def _(config_dict_with_optional, config_with_optional, tempfile, tree):
     with tempfile.TemporaryDirectory() as _temp_dir:
-        handler_with_optional.write(_temp_dir, config_with_optional)
+        config_with_optional.write(_temp_dir, config_dict_with_optional)
         print(tree(_temp_dir))
     return
 
@@ -653,8 +656,8 @@ def _(mo):
 
 @app.cell
 def _(PotentiallyLargeFileHandler, make_dirconfig, tree):
-    ConfigHandlerWithLarge = make_dirconfig(
-        cls_name="ConfigHandlerWithLarge",
+    ConfigWithLarge = make_dirconfig(
+        cls_name="ConfigWithLarge",
         spec={
             "a": {"handler": PotentiallyLargeFileHandler},
             "b": {"handler": PotentiallyLargeFileHandler},
@@ -662,11 +665,9 @@ def _(PotentiallyLargeFileHandler, make_dirconfig, tree):
         },
     )
     print(tree("./sizes"))
-    handler_with_large = ConfigHandlerWithLarge(
-        a="small.csv", b="big.csv", c="huge.csv"
-    )
-    config_with_large = handler_with_large.read("./sizes")
-    config_with_large
+    config_with_large = ConfigWithLarge(a="small.csv", b="big.csv", c="huge.csv")
+    config_dict_with_large = config_with_large.read("./sizes")
+    config_dict_with_large
     return
 
 
@@ -689,8 +690,8 @@ def _(CsvFileHandler, YamlFileHandler, make_dirconfig):
     class SaferCsvFileHandler(CsvFileHandler):
         pass
 
-    ConfigHandlerWithAbsPath = make_dirconfig(
-        cls_name="ConfigHandlerWithAbsPath",
+    ConfigWithAbsPath = make_dirconfig(
+        cls_name="ConfigWithAbsPath",
         spec={
             "config": {"path": "config.yml", "handler": YamlFileHandler},
             "data": {"path": "data.csv", "handler": SaferCsvFileHandler},
@@ -700,22 +701,22 @@ def _(CsvFileHandler, YamlFileHandler, make_dirconfig):
             },
         },
     )
-    handler_with_abs_path = ConfigHandlerWithAbsPath()
-    print(handler_with_abs_path)
-    return (handler_with_abs_path,)
-
-
-@app.cell
-def _(handler_with_abs_path):
-    config_with_abs_path = handler_with_abs_path.read("./basic/")
-    config_with_abs_path
+    config_with_abs_path = ConfigWithAbsPath()
+    print(config_with_abs_path)
     return (config_with_abs_path,)
 
 
 @app.cell
-def _(config_with_abs_path, handler_with_abs_path, tempfile, tree):
+def _(config_with_abs_path):
+    config_dict_with_abs_path = config_with_abs_path.read("./basic/")
+    config_dict_with_abs_path
+    return (config_dict_with_abs_path,)
+
+
+@app.cell
+def _(config_dict_with_abs_path, config_with_abs_path, tempfile, tree):
     with tempfile.TemporaryDirectory() as _temp_dir:
-        handler_with_abs_path.write(_temp_dir, config_with_abs_path)
+        config_with_abs_path.write(_temp_dir, config_dict_with_abs_path)
         print(tree(_temp_dir))
     return
 
@@ -732,8 +733,8 @@ def _(mo):
 
 @app.cell
 def _(CsvFileHandler, YamlFileHandler, filter_missing, make_dirconfig):
-    ConfigHandlerWithMeta = make_dirconfig(
-        cls_name="ConfigHandlerWithMeta",
+    ConfigWithMeta = make_dirconfig(
+        cls_name="ConfigWithMeta",
         spec={
             "config": {"path": "config.yml", "handler": YamlFileHandler},
             "data": {"path": "data.csv", "handler": CsvFileHandler},
@@ -743,25 +744,25 @@ def _(CsvFileHandler, YamlFileHandler, filter_missing, make_dirconfig):
             },
         },
     )
-    handler_with_meta = ConfigHandlerWithMeta()
-    config_with_meta = handler_with_meta.read("./basic")
-    config_with_meta
-    return config_with_meta, handler_with_meta
+    config_with_meta = ConfigWithMeta()
+    config_dict_with_meta = config_with_meta.read("./basic")
+    config_dict_with_meta
+    return config_dict_with_meta, config_with_meta
 
 
 @app.cell
-def _(config_with_meta, handler_with_meta, tempfile, tree):
-    config_with_meta["metadata"] = [
+def _(config_dict_with_meta, config_with_meta, tempfile, tree):
+    config_dict_with_meta["metadata"] = [
         ["created_at", "2024-01-01"],
         ["version", "1.0"],
         ["source", "notebook"],
     ]
 
     with tempfile.TemporaryDirectory() as _temp_dir:
-        handler_with_meta.write(_temp_dir, config_with_meta)
+        config_with_meta.write(_temp_dir, config_dict_with_meta)
         print(tree(_temp_dir))
 
-        reread_config = handler_with_meta.read(_temp_dir)
+        reread_config = config_with_meta.read(_temp_dir)
 
     reread_config["metadata"]
     return
