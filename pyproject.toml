@@ -4,7 +4,7 @@ build-backend = "uv_build"
 
 [project]
 name = "dirconf"
-version = "0.5.1"
+version = "0.5.2"
 description = "Build declarative schemas for multi-file configuration directories using Python dataclasses, with dict-based read and write."
 authors = [
     { name = "Joe Marsh Rossney", email = "17361029+jmarshrossney@users.noreply.github.com" }
@@ -43,6 +43,15 @@ docs = [
     "marimo-md-export>=0.4.3",
     "mkdocstrings[python]>=0.30.0",
     "zensical>=0.0.39",
+    {include-group = "examples"},
+]
+examples = [
+    "f90nml>=1.5",
+    "netcdf4>=1.7.4",
+    "numpy>=2.4.4",
+    "pydantic>=2.13.3",
+    "pyyaml>=6.0.3",
+    "xarray>=2026.4.0",
 ]
 test = [
     "coverage>=7.13.5",

@@ -1,12 +1,3 @@
-# /// script
-# requires-python = ">=3.12"
-# dependencies = [
-#     "marimo",
-#     "pydantic",
-#     "pyyaml",
-# ]
-# ///
-
 import marimo
 
 __generated_with = "0.23.5"

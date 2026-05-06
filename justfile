@@ -29,6 +29,7 @@ typecheck:
 
 # Build the documentation.
 docs:
-  cd examples/101/ && marimo-md-export notebook.py ../../docs/101.md --sandbox
-  cd examples/jules/ && marimo-md-export notebook.py ../../docs/jules.md --sandbox --overflow scroll
+  cd examples/101/ && marimo-md-export notebook.py ../../docs/101.md
+  cd examples/jules/ && marimo-md-export notebook.py ../../docs/jules.md --overflow scroll
+  ruff format examples/  # override marimo's annoying reformatting
   zensical build

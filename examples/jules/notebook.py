@@ -1,14 +1,3 @@
-# /// script
-# requires-python = ">=3.12"
-# dependencies = [
-#     "f90nml",
-#     "marimo",
-#     "netcdf4",
-#     "numpy",
-#     "xarray",
-# ]
-# ///
-
 import marimo
 
 __generated_with = "0.23.5"
