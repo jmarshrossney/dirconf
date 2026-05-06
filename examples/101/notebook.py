@@ -2,6 +2,7 @@
 # requires-python = ">=3.12"
 # dependencies = [
 #     "marimo",
+#     "pydantic",
 #     "pyyaml",
 # ]
 # ///
@@ -779,9 +780,91 @@ def _(mo):
 @app.cell(hide_code=True)
 def _(mo):
     mo.md(r"""
-    ### Strategies for validation
+    ## Config Validation
 
-    *To do.*
+    A primary motivation for reading file-based configurations into Python dicts is to enable validation using Python tooling.
+
+    Here we demonstrate how to validate the configuration dict returned by `read` using [Pydantic](https://docs.pydantic.dev/).
+    """)
+    return
+
+
+@app.cell
+def _():
+    from pydantic import BaseModel
+
+    class ParamsModel(BaseModel):
+        a: float
+        b: float
+        c: float
+
+    class ConfigModel(BaseModel):
+        id: str
+        params: ParamsModel
+        init_state: list[float]
+        switch: bool
+
+    return (ConfigModel,)
+
+
+@app.cell(hide_code=True)
+def _(mo):
+    mo.md(r"""
+    We can now validate the 'basic' configuration from earlier:
+    """)
+    return
+
+
+@app.cell
+def _(config_dict):
+    config_dict
+    return
+
+
+@app.cell
+def _(ConfigModel, config_dict):
+    validated_config = ConfigModel(**config_dict["config"])
+    validated_config
+    return
+
+
+@app.cell(hide_code=True)
+def _(mo):
+    mo.md(r"""
+    If the configuration contains invalid data, Pydantic will raise a clear validation error:
+    """)
+    return
+
+
+@app.cell
+def _(ConfigModel):
+    try:
+        ConfigModel(
+            id=123,
+            params={"a": "not a float", "b": 2.0, "c": 3.0},
+            init_state=[0, 0, 0],
+            switch=True,
+        )
+    except Exception as e:
+        print(type(e).__name__)
+        print(e)
+    return
+
+
+@app.cell(hide_code=True)
+def _(mo):
+    mo.md(r"""
+    !!! tip
+        You can integrate validation directly into your workflow by wrapping the `read` method:
+
+        ```python
+        def read_validated(config_instance, path):
+            config_dict = config_instance.read(path)
+            config_dict["config"] = ConfigModel(**config_dict["config"]).model_dump()
+            return config_dict
+        ```
+
+        This ensures that every time you load a configuration, it is automatically validated against your Pydantic model.
     """)
     return
 
