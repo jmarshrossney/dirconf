@@ -193,14 +193,14 @@ def _(NamelistFileHandler, dirconf):
         "urban",
     ]
 
-    NamelistConfig = dirconf.make_dirconfig(
-        cls_name="NamelistConfig",
+    NamelistDirConfig = dirconf.make_dirconfig(
+        cls_name="NamelistDirConfig",
         spec={
             name: {"path": f"{name}.nml", "handler": NamelistFileHandler}
             for name in _jules_namelists
         },
     )
-    return (NamelistConfig,)
+    return (NamelistDirConfig,)
 
 
 @app.cell(hide_code=True)
@@ -212,11 +212,11 @@ def _(mo):
 
 
 @app.cell
-def _(NamelistConfig):
-    namelist_config = NamelistConfig()
+def _(NamelistDirConfig):
+    namelist_dirconfig = NamelistDirConfig()
 
-    print(namelist_config)
-    return (namelist_config,)
+    print(namelist_dirconfig)
+    return (namelist_dirconfig,)
 
 
 @app.cell(hide_code=True)
@@ -232,11 +232,11 @@ def _(mo):
 
 
 @app.cell
-def _(namelist_config):
-    namelist_config_dict = namelist_config.read("config/namelists")
+def _(namelist_dirconfig):
+    namelist_dirconfig_dict = namelist_dirconfig.read("config/namelists")
 
-    list(namelist_config_dict.keys())
-    return (namelist_config_dict,)
+    list(namelist_dirconfig_dict.keys())
+    return (namelist_dirconfig_dict,)
 
 
 @app.cell(hide_code=True)
@@ -249,8 +249,8 @@ def _(mo):
 
 
 @app.cell
-def _(namelist_config_dict):
-    namelist_config_dict["drive"]
+def _(namelist_dirconfig_dict):
+    namelist_dirconfig_dict["drive"]
     return
 
 
@@ -403,8 +403,8 @@ def _(AsciiFileHandler, NetcdfFileHandler, dirconf):
 
 @app.cell
 def _(AsciiFileHandler, dirconf):
-    InputFilesConfig = dirconf.make_dirconfig(
-        cls_name="InputFilesConfig",
+    InputFilesDirConfig = dirconf.make_dirconfig(
+        cls_name="InputFilesDirConfig",
         spec={
             "initial_conditions": {
                 "handler": AsciiFileHandler,
@@ -415,27 +415,27 @@ def _(AsciiFileHandler, dirconf):
             "driving_data": {},  # handler resolved by file extension at runtime
         },
     )
-    return (InputFilesConfig,)
+    return (InputFilesDirConfig,)
 
 
 @app.cell
-def _(NamelistConfig, dirconf):
-    JulesConfig = dirconf.make_dirconfig(
-        cls_name="JulesConfig",
+def _(NamelistDirConfig, dirconf):
+    JulesDirConfig = dirconf.make_dirconfig(
+        cls_name="JulesDirConfig",
         spec={
             "inputs": {},  # we will fix this upon instantiation
-            "namelists": {"handler": NamelistConfig},  # fully fixed
+            "namelists": {"handler": NamelistDirConfig},  # fully fixed
         },
     )
-    return (JulesConfig,)
+    return (JulesDirConfig,)
 
 
 @app.cell(hide_code=True)
 def _(mo):
     mo.md(r"""
-    With the input file handlers defined, we can now compose the top-level `JulesConfig`.
+    With the input file handlers defined, we can now compose the top-level `JulesDirConfig`.
     Note that the `inputs` node uses a lambda factory function rather than a direct handler
-    instance. This defers instantiation of `InputFilesConfig` until the handler is constructed,
+    instance. This defers instantiation of `InputFilesDirConfig` until the handler is constructed,
     allowing us to bind specific file paths at that time. The `namelists` node, by contrast,
     is fully fixed since all namelist file paths are known in advance.
     """)
@@ -477,12 +477,12 @@ def _(mo):
 
 
 @app.cell
-def _(InputFilesConfig, JulesConfig):
-    config_ascii = JulesConfig(
+def _(InputFilesDirConfig, JulesDirConfig):
+    dirconfig_ascii = JulesDirConfig(
         namelists="namelists",
         inputs={
             "path": "inputs",
-            "handler": lambda: InputFilesConfig(
+            "handler": lambda: InputFilesDirConfig(
                 initial_conditions="initial_conditions.dat",
                 tile_fractions="tile_fractions.dat",
                 driving_data="Loobos_1997.dat",
@@ -490,13 +490,13 @@ def _(InputFilesConfig, JulesConfig):
         },
     )
 
-    print(config_ascii)
-    return (config_ascii,)
+    print(dirconfig_ascii)
+    return (dirconfig_ascii,)
 
 
 @app.cell
-def _(config_ascii):
-    config_dict_ascii = config_ascii.read("./config")
+def _(dirconfig_ascii):
+    dirconfig_dict_ascii = dirconfig_ascii.read("./config")
     return
 
 
@@ -509,26 +509,26 @@ def _(mo):
 
 
 @app.cell
-def _(InputFilesConfig, JulesConfig):
-    config_netcdf = JulesConfig(
+def _(InputFilesDirConfig, JulesDirConfig):
+    dirconfig_netcdf = JulesDirConfig(
         namelists="namelists",
         inputs={
             "path": "inputs",
-            "handler": lambda: InputFilesConfig(
+            "handler": lambda: InputFilesDirConfig(
                 initial_conditions="initial_conditions.dat",
                 tile_fractions="tile_fractions.dat",
                 driving_data="Loobos_1997.nc",
             ),
         },
     )
-    print(config_netcdf)
-    return (config_netcdf,)
+    print(dirconfig_netcdf)
+    return (dirconfig_netcdf,)
 
 
 @app.cell
-def _(config_netcdf):
-    config_dict_netcdf = config_netcdf.read("./config")
-    return (config_dict_netcdf,)
+def _(dirconfig_netcdf):
+    dirconfig_dict_netcdf = dirconfig_netcdf.read("./config")
+    return (dirconfig_dict_netcdf,)
 
 
 @app.cell(hide_code=True)
@@ -548,20 +548,20 @@ def _(mo):
 
 
 @app.cell
-def _(config_dict_netcdf, config_netcdf):
+def _(dirconfig_dict_netcdf, dirconfig_netcdf):
     import tempfile
 
     print(
         "current output period: ",
-        config_dict_netcdf["namelists"]["output"]["jules_output_profile"][
+        dirconfig_dict_netcdf["namelists"]["output"]["jules_output_profile"][
             "output_period"
         ],
     )
-    config_dict_netcdf["namelists"]["output"]["jules_output_profile"][
+    dirconfig_dict_netcdf["namelists"]["output"]["jules_output_profile"][
         "output_period"
     ] = 3600
     with tempfile.TemporaryDirectory() as temp_dir:
-        config_netcdf.write(temp_dir, config_dict_netcdf)
+        dirconfig_netcdf.write(temp_dir, dirconfig_dict_netcdf)
     return
 
 
