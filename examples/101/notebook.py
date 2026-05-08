@@ -197,9 +197,9 @@ def _(mo):
 
 @app.cell
 def _(dirconfig):
-    dirconfig_dict = dirconfig.read("./basic")
-    dirconfig_dict
-    return (dirconfig_dict,)
+    basic_config = dirconfig.read("./basic")
+    basic_config
+    return (basic_config,)
 
 
 @app.cell(hide_code=True)
@@ -215,20 +215,20 @@ def _(mo):
 
 
 @app.cell
-def _(dirconfig, dirconfig_dict, tree):
+def _(basic_config, dirconfig, tree):
     import tempfile
 
     # Modify the 'a' parameter
-    dirconfig_dict["config"]["params"]["a"] = -1.0
+    basic_config["config"]["params"]["a"] = -1.0
 
     # Write to a temporary directory, and check it's worked
     with tempfile.TemporaryDirectory() as _temp_dir:
-        dirconfig.write(_temp_dir, dirconfig_dict)
+        dirconfig.write(_temp_dir, basic_config)
         print(tree(_temp_dir))
 
-        reread_dirconfig_dict = dirconfig.read(_temp_dir)
+        reread_basic_config = dirconfig.read(_temp_dir)
 
-    reread_dirconfig_dict
+    reread_basic_config
     return (tempfile,)
 
 
@@ -553,8 +553,8 @@ def _(mo):
 @app.cell
 def _(DirConfigWithOptional):
     dirconfig_with_optional = DirConfigWithOptional()
-    dirconfig_dict_with_optional = dirconfig_with_optional.read("./basic")
-    return dirconfig_dict_with_optional, dirconfig_with_optional
+    config_with_optional = dirconfig_with_optional.read("./basic")
+    return config_with_optional, dirconfig_with_optional
 
 
 @app.cell(hide_code=True)
@@ -568,8 +568,8 @@ def _(mo):
 
 
 @app.cell
-def _(dirconfig_dict_with_optional):
-    dirconfig_dict_with_optional
+def _(config_with_optional):
+    config_with_optional
     return
 
 
@@ -582,9 +582,9 @@ def _(mo):
 
 
 @app.cell
-def _(dirconfig_dict_with_optional, dirconfig_with_optional, tempfile, tree):
+def _(config_with_optional, dirconfig_with_optional, tempfile, tree):
     with tempfile.TemporaryDirectory() as _temp_dir:
-        dirconfig_with_optional.write(_temp_dir, dirconfig_dict_with_optional)
+        dirconfig_with_optional.write(_temp_dir, config_with_optional)
         print(tree(_temp_dir))
     return
 
@@ -658,8 +658,8 @@ def _(PotentiallyLargeFileHandler, make_dirconfig, tree):
     )
     print(tree("./sizes"))
     dirconfig_with_large = DirConfigWithLarge(a="small.csv", b="big.csv", c="huge.csv")
-    dirconfig_dict_with_large = dirconfig_with_large.read("./sizes")
-    dirconfig_dict_with_large
+    config_with_large = dirconfig_with_large.read("./sizes")
+    config_with_large
     return
 
 
@@ -700,15 +700,15 @@ def _(CsvFileHandler, YamlFileHandler, make_dirconfig):
 
 @app.cell
 def _(dirconfig_with_abs_path):
-    dirconfig_dict_with_abs_path = dirconfig_with_abs_path.read("./basic/")
-    dirconfig_dict_with_abs_path
-    return (dirconfig_dict_with_abs_path,)
+    config_with_abs_path = dirconfig_with_abs_path.read("./basic/")
+    config_with_abs_path
+    return (config_with_abs_path,)
 
 
 @app.cell
-def _(dirconfig_dict_with_abs_path, dirconfig_with_abs_path, tempfile, tree):
+def _(config_with_abs_path, dirconfig_with_abs_path, tempfile, tree):
     with tempfile.TemporaryDirectory() as _temp_dir:
-        dirconfig_with_abs_path.write(_temp_dir, dirconfig_dict_with_abs_path)
+        dirconfig_with_abs_path.write(_temp_dir, config_with_abs_path)
         print(tree(_temp_dir))
     return
 
@@ -737,26 +737,26 @@ def _(CsvFileHandler, YamlFileHandler, filter_missing, make_dirconfig):
         },
     )
     dirconfig_with_meta = DirConfigWithMeta()
-    dirconfig_dict_with_meta = dirconfig_with_meta.read("./basic")
-    dirconfig_dict_with_meta
-    return dirconfig_dict_with_meta, dirconfig_with_meta
+    config_with_meta = dirconfig_with_meta.read("./basic")
+    config_with_meta
+    return config_with_meta, dirconfig_with_meta
 
 
 @app.cell
-def _(dirconfig_dict_with_meta, dirconfig_with_meta, tempfile, tree):
-    dirconfig_dict_with_meta["metadata"] = [
+def _(config_with_meta, dirconfig_with_meta, tempfile, tree):
+    config_with_meta["metadata"] = [
         ["created_at", "2024-01-01"],
         ["version", "1.0"],
         ["source", "notebook"],
     ]
 
     with tempfile.TemporaryDirectory() as _temp_dir:
-        dirconfig_with_meta.write(_temp_dir, dirconfig_dict_with_meta)
+        dirconfig_with_meta.write(_temp_dir, config_with_meta)
         print(tree(_temp_dir))
 
-        reread_dirconfig = dirconfig_with_meta.read(_temp_dir)
+        complete_config = dirconfig_with_meta.read(_temp_dir)
 
-    reread_dirconfig["metadata"]
+    complete_config["metadata"]
     return
 
 
@@ -807,14 +807,14 @@ def _(mo):
 
 
 @app.cell
-def _(dirconfig_dict):
-    dirconfig_dict
+def _(basic_config):
+    basic_config
     return
 
 
 @app.cell
-def _(ConfigModel, dirconfig_dict):
-    validated_config = ConfigModel(**dirconfig_dict["config"])
+def _(ConfigModel, basic_config):
+    validated_config = ConfigModel(**basic_config["config"])
     validated_config
     return
 

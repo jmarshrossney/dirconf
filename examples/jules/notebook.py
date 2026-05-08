@@ -233,10 +233,10 @@ def _(mo):
 
 @app.cell
 def _(namelist_dirconfig):
-    namelist_dirconfig_dict = namelist_dirconfig.read("config/namelists")
+    namelists_config = namelist_dirconfig.read("config/namelists")
 
-    list(namelist_dirconfig_dict.keys())
-    return (namelist_dirconfig_dict,)
+    list(namelists_config.keys())
+    return (namelists_config,)
 
 
 @app.cell(hide_code=True)
@@ -249,8 +249,8 @@ def _(mo):
 
 
 @app.cell
-def _(namelist_dirconfig_dict):
-    namelist_dirconfig_dict["drive"]
+def _(namelists_config):
+    namelists_config["drive"]
     return
 
 
@@ -496,7 +496,7 @@ def _(InputFilesDirConfig, JulesDirConfig):
 
 @app.cell
 def _(dirconfig_ascii):
-    dirconfig_dict_ascii = dirconfig_ascii.read("./config")
+    jules_config_ascii = dirconfig_ascii.read("./config")
     return
 
 
@@ -527,8 +527,8 @@ def _(InputFilesDirConfig, JulesDirConfig):
 
 @app.cell
 def _(dirconfig_netcdf):
-    dirconfig_dict_netcdf = dirconfig_netcdf.read("./config")
-    return (dirconfig_dict_netcdf,)
+    jules_config_netcdf = dirconfig_netcdf.read("./config")
+    return (jules_config_netcdf,)
 
 
 @app.cell(hide_code=True)
@@ -548,20 +548,20 @@ def _(mo):
 
 
 @app.cell
-def _(dirconfig_dict_netcdf, dirconfig_netcdf):
+def _(dirconfig_netcdf, jules_config_netcdf):
     import tempfile
 
     print(
         "current output period: ",
-        dirconfig_dict_netcdf["namelists"]["output"]["jules_output_profile"][
+        jules_config_netcdf["namelists"]["output"]["jules_output_profile"][
             "output_period"
         ],
     )
-    dirconfig_dict_netcdf["namelists"]["output"]["jules_output_profile"][
+    jules_config_netcdf["namelists"]["output"]["jules_output_profile"][
         "output_period"
     ] = 3600
     with tempfile.TemporaryDirectory() as temp_dir:
-        dirconfig_netcdf.write(temp_dir, dirconfig_dict_netcdf)
+        dirconfig_netcdf.write(temp_dir, jules_config_netcdf)
     return
 
 
