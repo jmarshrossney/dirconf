@@ -19,16 +19,25 @@ class ValidationResult:
 
     valid: bool
     missing: list[Path] = dataclasses.field(default_factory=list)
+    optional_missing: list[Path] = dataclasses.field(default_factory=list)
     unreadable: list[Path] = dataclasses.field(default_factory=list)
 
     def __repr__(self) -> str:
         if self.valid:
-            return "ValidationResult: PASSED"
+            if not self.optional_missing:
+                return "ValidationResult: PASSED"
+            lines = ["ValidationResult: PASSED"]
+            lines.append(f"  Optional missing ({len(self.optional_missing)}):")
+            lines.extend(f"    - {p}" for p in self.optional_missing)
+            return "\n".join(lines)
 
         lines = ["ValidationResult: FAILED"]
         if self.missing:
             lines.append(f"  Missing ({len(self.missing)}):")
             lines.extend(f"    - {p}" for p in self.missing)
+        if self.optional_missing:
+            lines.append(f"  Optional missing ({len(self.optional_missing)}):")
+            lines.extend(f"    - {p}" for p in self.optional_missing)
         if self.unreadable:
             lines.append(f"  Unreadable ({len(self.unreadable)}):")
             lines.extend(f"    - {p}" for p in self.unreadable)
@@ -210,11 +219,15 @@ class DirConfig:
         handler = node.handler()
 
         if not full_path.exists():
-            result.missing.append(full_path)
+            if getattr(handler, "_filter_missing", False):
+                result.optional_missing.append(full_path)
+            else:
+                result.missing.append(full_path)
             return
 
         if not os.access(full_path, os.R_OK):
             result.unreadable.append(full_path)
+            return
 
         if isinstance(handler, DirConfig) and full_path.is_dir():
             for child in handler.nodes(recurse=True):
@@ -226,7 +239,10 @@ class DirConfig:
         """Validate that a directory satisfies the structure defined by this DirConfig.
 
         Checks that all expected files exist and are readable without actually
-        reading their contents.
+        reading their contents. Nodes whose handlers are decorated with
+        ``@filter_missing`` are treated as optional: if the file is absent, it
+        is recorded in ``ValidationResult.optional_missing`` rather than
+        ``ValidationResult.missing``, and does not cause validation to fail.
 
         Arguments:
           path: A path to a directory to validate.

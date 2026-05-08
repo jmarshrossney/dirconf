@@ -761,7 +761,9 @@ def _(dirconfig_with_abs_path):
 def _(config_with_abs_path, dirconfig_with_abs_path, tempfile):
     with tempfile.TemporaryDirectory() as _temp_dir:
         dirconfig_with_abs_path.write(_temp_dir, config_with_abs_path)
-        dirconfig_with_abs_path.validate(_temp_dir, strict=False)
+        _val_result = dirconfig_with_abs_path.validate(_temp_dir, strict=False)
+
+    _val_result
     return
 
 

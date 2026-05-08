@@ -10,6 +10,7 @@ from dirconf.config import (
     _str_is_json,
     _str_is_path,
 )
+from dirconf.filter import filter_missing
 from dirconf.handler import handler_registry
 from dirconf.node import Node
 
@@ -379,3 +380,150 @@ class TestValidate:
         config = DirConfig()
         result = config.validate(tmp_path, strict=False)
         assert result
+
+
+class TestValidateOptionalMissing:
+    def test_filter_missing_handler_produces_optional_missing(self, tmp_path):
+        register_handler("simple", SimpleHandler, extensions=[".json"])
+
+        @filter_missing()
+        class OptionalHandler:
+            def read(self, path):
+                return {}
+
+            def write(self, path, data, *, overwrite_ok=False):
+                pass
+
+        config = make_dirconfig(
+            "TestConfig",
+            {
+                "required": {"path": "required.json", "handler": "simple"},
+                "optional": {"path": "optional.file", "handler": OptionalHandler},
+            },
+        )
+
+        (tmp_path / "required.json").write_text('{"key": "value"}')
+
+        result = config().validate(tmp_path, strict=False)
+        assert result.valid is True
+        assert len(result.missing) == 0
+        assert len(result.optional_missing) == 1
+        assert result.optional_missing[0].name == "optional.file"
+
+    def test_validation_passes_when_only_optional_missing(self, tmp_path):
+        register_handler("simple", SimpleHandler, extensions=[".json"])
+
+        @filter_missing()
+        class OptionalHandler:
+            def read(self, path):
+                return {}
+
+            def write(self, path, data, *, overwrite_ok=False):
+                pass
+
+        config = make_dirconfig(
+            "TestConfig",
+            {"optional": {"path": "optional.file", "handler": OptionalHandler}},
+        )
+
+        result = config().validate(tmp_path, strict=False)
+        assert result.valid is True
+        assert len(result.optional_missing) == 1
+
+    def test_validation_fails_when_required_and_optional_missing(self, tmp_path):
+        register_handler("simple", SimpleHandler, extensions=[".json"])
+
+        @filter_missing()
+        class OptionalHandler:
+            def read(self, path):
+                return {}
+
+            def write(self, path, data, *, overwrite_ok=False):
+                pass
+
+        config = make_dirconfig(
+            "TestConfig",
+            {
+                "required": {"path": "required.json", "handler": "simple"},
+                "optional": {"path": "optional.file", "handler": OptionalHandler},
+            },
+        )
+
+        result = config().validate(tmp_path, strict=False)
+        assert result.valid is False
+        assert len(result.missing) == 1
+        assert len(result.optional_missing) == 1
+
+    def test_repr_shows_optional_missing_on_pass(self, tmp_path):
+        register_handler("simple", SimpleHandler, extensions=[".json"])
+
+        @filter_missing()
+        class OptionalHandler:
+            def read(self, path):
+                return {}
+
+            def write(self, path, data, *, overwrite_ok=False):
+                pass
+
+        config = make_dirconfig(
+            "TestConfig",
+            {"optional": {"path": "optional.file", "handler": OptionalHandler}},
+        )
+
+        result = config().validate(tmp_path, strict=False)
+        repr_str = repr(result)
+        assert "PASSED" in repr_str
+        assert "Optional missing (1)" in repr_str
+        assert "optional.file" in repr_str
+
+    def test_repr_shows_optional_missing_on_fail(self, tmp_path):
+        register_handler("simple", SimpleHandler, extensions=[".json"])
+
+        @filter_missing()
+        class OptionalHandler:
+            def read(self, path):
+                return {}
+
+            def write(self, path, data, *, overwrite_ok=False):
+                pass
+
+        config = make_dirconfig(
+            "TestConfig",
+            {
+                "required": {"path": "required.json", "handler": "simple"},
+                "optional": {"path": "optional.file", "handler": OptionalHandler},
+            },
+        )
+
+        result = config().validate(tmp_path, strict=False)
+        repr_str = repr(result)
+        assert "FAILED" in repr_str
+        assert "Missing (1)" in repr_str
+        assert "Optional missing (1)" in repr_str
+
+    def test_unreadable_directory_does_not_recurse(self, tmp_path):
+        register_handler("simple", SimpleHandler, extensions=[".json"])
+
+        inner_config = make_dirconfig(
+            "InnerConfig",
+            {"inner_file": {"path": "inner.json", "handler": "simple"}},
+        )
+
+        outer_config = make_dirconfig(
+            "OuterConfig",
+            {
+                "subdir": {"path": "sub", "handler": inner_config},
+            },
+        )
+
+        (tmp_path / "sub").mkdir()
+        (tmp_path / "sub" / "inner.json").write_text('{"inner": true}')
+        (tmp_path / "sub").chmod(0o000)
+
+        try:
+            result = outer_config().validate(tmp_path, strict=False)
+            assert result.valid is False
+            assert len(result.unreadable) == 1
+            assert result.missing == []
+        finally:
+            (tmp_path / "sub").chmod(0o755)
