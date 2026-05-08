@@ -215,7 +215,7 @@ def _(mo):
 def _(NamelistDirConfig):
     namelist_dirconfig = NamelistDirConfig()
 
-    print(namelist_dirconfig)
+    namelist_dirconfig
     return (namelist_dirconfig,)
 
 
@@ -454,7 +454,7 @@ def _(mo):
 def _():
     from dirconf.utils import tree
 
-    print(tree("./config"))
+    tree("./config")
     return
 
 
@@ -490,7 +490,7 @@ def _(InputFilesDirConfig, JulesDirConfig):
         },
     )
 
-    print(dirconfig_ascii)
+    dirconfig_ascii
     return (dirconfig_ascii,)
 
 
@@ -521,7 +521,7 @@ def _(InputFilesDirConfig, JulesDirConfig):
             ),
         },
     )
-    print(dirconfig_netcdf)
+    dirconfig_netcdf
     return (dirconfig_netcdf,)
 
 
@@ -548,15 +548,15 @@ def _(mo):
 
 
 @app.cell
+def _(jules_config_netcdf):
+    jules_config_netcdf["namelists"]["output"]["jules_output_profile"]["output_period"]
+    return
+
+
+@app.cell
 def _(dirconfig_netcdf, jules_config_netcdf):
     import tempfile
 
-    print(
-        "current output period: ",
-        jules_config_netcdf["namelists"]["output"]["jules_output_profile"][
-            "output_period"
-        ],
-    )
     jules_config_netcdf["namelists"]["output"]["jules_output_profile"][
         "output_period"
     ] = 3600
